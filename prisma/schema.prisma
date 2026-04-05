@@ -1,0 +1,275 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum MemberStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum LoanApplicationStatus {
+  NEW
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum LoanStatus {
+  ACTIVE
+  DELINQUENT
+  COMPLETED
+}
+
+enum PaymentMethod {
+  TRANSFER
+  CASH
+}
+
+enum TransactionCategory {
+  SAVINGS
+  LOAN
+}
+
+enum TransactionType {
+  MANDATORY_SAVING_DEPOSIT
+  VOLUNTARY_SAVING_DEPOSIT
+  LOAN_PAYMENT
+}
+
+enum NotificationType {
+  ANNOUNCEMENT
+  LOAN_APPROVED
+  PAYMENT_POSTED
+  SYSTEM
+}
+
+model User {
+  id                   String            @id @default(cuid())
+  role                 Role
+  name                 String
+  phone                String            @unique
+  email                String?           @unique
+  address              String?
+  passwordHash         String
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  memberProfile        MemberProfile?
+  notifications        Notification[]    @relation("UserNotifications")
+  createdAnnouncements Announcement[]    @relation("AnnouncementCreator")
+  updatedAnnouncements Announcement[]    @relation("AnnouncementUpdater")
+  reviewedApplications LoanApplication[] @relation("ApplicationReviewer")
+  approvedLoans        Loan[]            @relation("LoanApprover")
+  recordedPayments     LoanPayment[]     @relation("PaymentRecorder")
+  createdTransactions  Transaction[]     @relation("TransactionCreator")
+
+  @@index([role])
+}
+
+model MemberProfile {
+  id              String                 @id @default(cuid())
+  userId          String                 @unique
+  memberCode      String                 @unique
+  status          MemberStatus           @default(ACTIVE)
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  user            User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  savingsBalances MemberSavingsBalance[]
+  loanApplications LoanApplication[]
+  loans           Loan[]
+  transactions    Transaction[]
+
+  @@index([status])
+}
+
+model SavingsProduct {
+  id           String                 @id @default(cuid())
+  code         String                 @unique
+  name         String
+  defaultAmount Decimal               @db.Decimal(14, 2)
+  isMandatory  Boolean                @default(false)
+  isActive     Boolean                @default(true)
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  balances     MemberSavingsBalance[]
+  transactions Transaction[]
+
+  @@index([isActive])
+}
+
+model LoanProduct {
+  id                 String            @id @default(cuid())
+  code               String            @unique
+  name               String
+  maxAmount          Decimal           @db.Decimal(14, 2)
+  interestRate       Decimal           @db.Decimal(5, 2)
+  adminFeeRate       Decimal           @db.Decimal(5, 2)
+  maxTenor           Int
+  isActive           Boolean           @default(true)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  loanApplications   LoanApplication[]
+  loans              Loan[]
+
+  @@index([isActive])
+}
+
+model MemberSavingsBalance {
+  id               String         @id @default(cuid())
+  memberId         String
+  savingsProductId String
+  amount           Decimal        @default(0) @db.Decimal(14, 2)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  member           MemberProfile  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  savingsProduct   SavingsProduct @relation(fields: [savingsProductId], references: [id], onDelete: Restrict)
+
+  @@unique([memberId, savingsProductId])
+  @@index([memberId])
+}
+
+model LoanApplication {
+  id                   String                @id @default(cuid())
+  applicationCode      String                @unique
+  memberId             String
+  loanProductId        String
+  amount               Decimal               @db.Decimal(14, 2)
+  tenor                Int
+  purpose              String
+  status               LoanApplicationStatus @default(NEW)
+  estimatedInstallment Decimal               @db.Decimal(14, 2)
+  reviewNote           String?
+  reviewedAt           DateTime?
+  reviewedById         String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  member               MemberProfile         @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  loanProduct          LoanProduct           @relation(fields: [loanProductId], references: [id], onDelete: Restrict)
+  reviewedBy           User?                 @relation("ApplicationReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  approvedLoan         Loan?
+  notifications        Notification[]
+
+  @@index([memberId, status])
+  @@index([status, createdAt])
+}
+
+model Loan {
+  id                 String       @id @default(cuid())
+  loanCode           String       @unique
+  memberId           String
+  loanProductId      String
+  loanApplicationId  String?      @unique
+  principalAmount    Decimal      @db.Decimal(14, 2)
+  remainingAmount    Decimal      @db.Decimal(14, 2)
+  installmentAmount  Decimal      @db.Decimal(14, 2)
+  tenor              Int
+  paidMonths         Int          @default(0)
+  nextDueDate        DateTime
+  status             LoanStatus   @default(ACTIVE)
+  approvedById       String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  member             MemberProfile @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  loanProduct        LoanProduct   @relation(fields: [loanProductId], references: [id], onDelete: Restrict)
+  loanApplication    LoanApplication? @relation(fields: [loanApplicationId], references: [id], onDelete: SetNull)
+  approvedBy         User?        @relation("LoanApprover", fields: [approvedById], references: [id], onDelete: SetNull)
+  payments           LoanPayment[]
+  transactions       Transaction[]
+  notifications      Notification[]
+
+  @@index([memberId, status])
+}
+
+model LoanPayment {
+  id           String        @id @default(cuid())
+  paymentCode  String        @unique
+  loanId       String
+  amount       Decimal       @db.Decimal(14, 2)
+  method       PaymentMethod
+  note         String?
+  proofUrl     String?
+  paymentDate  DateTime      @default(now())
+  recordedById String
+  createdAt    DateTime      @default(now())
+  loan         Loan          @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  recordedBy   User          @relation("PaymentRecorder", fields: [recordedById], references: [id], onDelete: Restrict)
+
+  @@index([loanId, paymentDate])
+}
+
+model Transaction {
+  id               String              @id @default(cuid())
+  transactionCode  String              @unique
+  memberId         String
+  loanId           String?
+  savingsProductId String?
+  category         TransactionCategory
+  type             TransactionType
+  amount           Decimal             @db.Decimal(14, 2)
+  status           String              @default("SUCCESS")
+  description      String
+  proofUrl         String?
+  transactionDate  DateTime            @default(now())
+  createdById      String?
+  createdAt        DateTime            @default(now())
+  member           MemberProfile       @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  loan             Loan?               @relation(fields: [loanId], references: [id], onDelete: SetNull)
+  savingsProduct   SavingsProduct?     @relation(fields: [savingsProductId], references: [id], onDelete: SetNull)
+  createdBy        User?               @relation("TransactionCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([memberId, transactionDate])
+  @@index([category, transactionDate])
+}
+
+model Announcement {
+  id               String         @id @default(cuid())
+  announcementCode String         @unique
+  title            String
+  content          String
+  isActive         Boolean        @default(true)
+  publishedAt      DateTime       @default(now())
+  createdById      String
+  updatedById      String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  createdBy        User           @relation("AnnouncementCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  updatedBy        User?          @relation("AnnouncementUpdater", fields: [updatedById], references: [id], onDelete: SetNull)
+  notifications    Notification[]
+
+  @@index([publishedAt])
+}
+
+model Notification {
+  id                String            @id @default(cuid())
+  notificationCode  String            @unique
+  userId            String
+  type              NotificationType
+  title             String
+  message           String
+  isRead            Boolean           @default(false)
+  announcementId    String?
+  loanApplicationId String?
+  loanId            String?
+  createdAt         DateTime          @default(now())
+  user              User              @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  announcement      Announcement?     @relation(fields: [announcementId], references: [id], onDelete: SetNull)
+  loanApplication   LoanApplication?  @relation(fields: [loanApplicationId], references: [id], onDelete: SetNull)
+  loan              Loan?             @relation(fields: [loanId], references: [id], onDelete: SetNull)
+
+  @@index([userId, isRead, createdAt])
+}
+
+
+
+
+
