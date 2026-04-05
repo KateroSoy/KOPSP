@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { WaveBackground } from '@/components/ui/WaveBackground';
 import { Phone, Lock } from 'lucide-react';
-import { demoAccounts } from '@/data/mockData';
 import { getUserFacingError, useData } from '@/context/DataContext';
 
 interface LoginScreenProps {
@@ -30,12 +29,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     } catch (error) {
       setError(getUserFacingError(error));
     }
-  };
-
-  const fillDemo = (demoPhone: string, demoPass: string) => {
-    setPhone(demoPhone);
-    setPassword(demoPass);
-    setError('');
   };
 
   return (
@@ -93,29 +86,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         </div>
       </form>
 
-      <div className="relative z-10 mt-10 pt-6 border-t border-gray-200">
-        <p className="text-sm font-medium text-gray-600 text-center mb-4">Pilih Akun Demo untuk Masuk:</p>
-        <div className="space-y-3">
-          {demoAccounts.map(acc => (
-            <button
-              key={acc.id}
-              type="button"
-              onClick={() => fillDemo(acc.phone, acc.password)}
-              className="w-full p-4 text-left border border-gray-200 rounded-xl hover:border-emerald-500 hover:bg-emerald-50/50 transition-all duration-200 flex justify-between items-center group backdrop-blur-sm bg-white/70"
-            >
-              <div>
-                <p className="font-semibold text-gray-900 group-hover:text-emerald-700">{acc.label}</p>
-                <p className="text-xs text-gray-500 mt-1">HP: {acc.phone} • Sandi: {acc.password}</p>
-              </div>
-              <span className={`text-xs px-2.5 py-1 rounded-md font-medium ${
-                acc.role === 'admin' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'
-              }`}>
-                {acc.role.toUpperCase()}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
+
     </div>
   );
 };
