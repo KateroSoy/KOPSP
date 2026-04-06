@@ -5,17 +5,26 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
 import {
+  arrearsReportQuerySchema,
   announcementSchema,
+  cashflowReportQuerySchema,
+  dailyTransactionsReportQuerySchema,
   idParamSchema,
+  installmentsReportQuerySchema,
   loanApplicationCreateSchema,
   loanApplicationReviewSchema,
   loanPaymentSchema,
+  loansReportQuerySchema,
   loanProductSchema,
   loginSchema,
   memberCreateSchema,
+  membersReportQuerySchema,
+  monthlyRecapReportQuerySchema,
   memberUpdateSchema,
   passwordChangeSchema,
   profileUpdateSchema,
+  reportRangeQuerySchema,
+  savingsReportQuerySchema,
   savingsProductSchema,
 } from "./server.schemas.js";
 import { env } from "./server.config.env.js";
@@ -161,6 +170,106 @@ export const createApp = (services: AppServices = createServices()) => {
         announcements,
         loans,
       });
+    }),
+  );
+
+  app.get(
+    "/api/admin/reports/summary",
+    requireAuth,
+    requireRole("admin"),
+    asyncHandler(async (req: AuthenticatedRequest, res) => {
+      const query = parseWithSchema(reportRangeQuerySchema, req.query);
+      ok(res, await services.admin.getSummaryReport(req.auth!.userId, query));
+    }),
+  );
+
+  app.get(
+    "/api/admin/reports/members",
+    requireAuth,
+    requireRole("admin"),
+    asyncHandler(async (req: AuthenticatedRequest, res) => {
+      const query = parseWithSchema(membersReportQuerySchema, req.query);
+      ok(res, await services.admin.getMembersReport(req.auth!.userId, query));
+    }),
+  );
+
+  app.get(
+    "/api/admin/reports/savings",
+    requireAuth,
+    requireRole("admin"),
+    asyncHandler(async (req: AuthenticatedRequest, res) => {
+      const query = parseWithSchema(savingsReportQuerySchema, req.query);
+      ok(res, await services.admin.getSavingsReport(req.auth!.userId, query));
+    }),
+  );
+
+  app.get(
+    "/api/admin/reports/loans",
+    requireAuth,
+    requireRole("admin"),
+    asyncHandler(async (req: AuthenticatedRequest, res) => {
+      const query = parseWithSchema(loansReportQuerySchema, req.query);
+      ok(res, await services.admin.getLoansReport(req.auth!.userId, query));
+    }),
+  );
+
+  app.get(
+    "/api/admin/reports/installments",
+    requireAuth,
+    requireRole("admin"),
+    asyncHandler(async (req: AuthenticatedRequest, res) => {
+      const query = parseWithSchema(installmentsReportQuerySchema, req.query);
+      ok(res, await services.admin.getInstallmentsReport(req.auth!.userId, query));
+    }),
+  );
+
+  app.get(
+    "/api/admin/reports/arrears",
+    requireAuth,
+    requireRole("admin"),
+    asyncHandler(async (req: AuthenticatedRequest, res) => {
+      const query = parseWithSchema(arrearsReportQuerySchema, req.query);
+      ok(res, await services.admin.getArrearsReport(req.auth!.userId, query));
+    }),
+  );
+
+  app.get(
+    "/api/admin/reports/cashflow",
+    requireAuth,
+    requireRole("admin"),
+    asyncHandler(async (req: AuthenticatedRequest, res) => {
+      const query = parseWithSchema(cashflowReportQuerySchema, req.query);
+      ok(res, await services.admin.getCashflowReport(req.auth!.userId, query));
+    }),
+  );
+
+  app.get(
+    "/api/admin/reports/daily-transactions",
+    requireAuth,
+    requireRole("admin"),
+    asyncHandler(async (req: AuthenticatedRequest, res) => {
+      const query = parseWithSchema(dailyTransactionsReportQuerySchema, req.query);
+      ok(res, await services.admin.getDailyTransactionsReport(req.auth!.userId, query));
+    }),
+  );
+
+  app.get(
+    "/api/admin/reports/monthly-recap",
+    requireAuth,
+    requireRole("admin"),
+    asyncHandler(async (req: AuthenticatedRequest, res) => {
+      const query = parseWithSchema(monthlyRecapReportQuerySchema, req.query);
+      ok(res, await services.admin.getMonthlyRecapReport(req.auth!.userId, query));
+    }),
+  );
+
+  app.get(
+    "/api/admin/reports/member-detail/:id",
+    requireAuth,
+    requireRole("admin"),
+    asyncHandler(async (req: AuthenticatedRequest, res) => {
+      const params = parseWithSchema(idParamSchema, req.params);
+      ok(res, await services.admin.getMemberDetailReport(req.auth!.userId, params.id));
     }),
   );
 

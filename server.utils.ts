@@ -72,7 +72,7 @@ export const requireAuth = (
 ) => {
   const header = req.header("authorization");
   if (!header?.startsWith("Bearer ")) {
-    next(new AppError(401, "UNAUTHORIZED", "Authentication is required."));
+    next(new AppError(401, "UNAUTHORIZED", "Autentikasi diperlukan."));
     return;
   }
 
@@ -80,7 +80,7 @@ export const requireAuth = (
     req.auth = verifyJwt(header.slice(7));
     next();
   } catch {
-    next(new AppError(401, "INVALID_TOKEN", "Your session token is invalid."));
+    next(new AppError(401, "INVALID_TOKEN", "Token sesi Anda tidak valid."));
   }
 };
 
@@ -88,11 +88,11 @@ export const requireRole =
   (...roles: SessionUser["role"][]) =>
   (req: AuthenticatedRequest, _res: Response, next: NextFunction) => {
     if (!req.auth) {
-      next(new AppError(401, "UNAUTHORIZED", "Authentication is required."));
+      next(new AppError(401, "UNAUTHORIZED", "Autentikasi diperlukan."));
       return;
     }
     if (!roles.includes(req.auth.role)) {
-      next(new AppError(403, "FORBIDDEN", "You do not have access to this resource."));
+      next(new AppError(403, "FORBIDDEN", "Anda tidak memiliki akses ke data ini."));
       return;
     }
     next();
@@ -101,7 +101,7 @@ export const requireRole =
 export const parseWithSchema = <T>(schema: ZodSchema<T>, value: unknown) => {
   const parsed = schema.safeParse(value);
   if (!parsed.success) {
-    throw new AppError(400, "VALIDATION_ERROR", "Request validation failed.", parsed.error.flatten());
+    throw new AppError(400, "VALIDATION_ERROR", "Validasi permintaan gagal.", parsed.error.flatten());
   }
   return parsed.data;
 };
@@ -167,14 +167,14 @@ export const savePaymentProof = async (input: {
 
   const match = input.dataUrl.match(/^data:(image\/(?:png|jpeg|jpg|webp));base64,([A-Za-z0-9+/=]+)$/i);
   if (!match) {
-    throw new AppError(400, "INVALID_PAYMENT_PROOF", "Payment proof must be a PNG, JPG, or WEBP image.");
+    throw new AppError(400, "INVALID_PAYMENT_PROOF", "Bukti pembayaran harus berupa gambar PNG, JPG, atau WEBP.");
   }
 
   const claimedMime = match[1].toLowerCase() === "image/jpg" ? "image/jpeg" : match[1].toLowerCase();
   const base64Payload = match[2];
 
   if (base64Payload.length % 4 !== 0 || !BASE64_PATTERN.test(base64Payload)) {
-    throw new AppError(400, "INVALID_PAYMENT_PROOF", "Payment proof encoding is invalid.");
+    throw new AppError(400, "INVALID_PAYMENT_PROOF", "Format bukti pembayaran tidak valid.");
   }
 
   const buffer = Buffer.from(base64Payload, "base64");
@@ -182,7 +182,7 @@ export const savePaymentProof = async (input: {
     throw new AppError(
       400,
       "INVALID_PAYMENT_PROOF_SIZE",
-      "Payment proof image must be smaller than 3 MB.",
+      "Ukuran bukti pembayaran harus lebih kecil dari 3 MB.",
     );
   }
 
@@ -191,7 +191,7 @@ export const savePaymentProof = async (input: {
     throw new AppError(
       400,
       "INVALID_PAYMENT_PROOF",
-      "Payment proof content does not match a supported image format.",
+      "Isi file bukti pembayaran tidak sesuai dengan format gambar yang didukung.",
     );
   }
 
@@ -236,15 +236,15 @@ export const prismaErrorToAppError = (error: unknown) => {
       : undefined;
 
   if (error instanceof ZodError) {
-    return new AppError(400, "VALIDATION_ERROR", "Request validation failed.", error.flatten());
+    return new AppError(400, "VALIDATION_ERROR", "Validasi permintaan gagal.", error.flatten());
   }
 
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     if (error.code === "P2002") {
-      return new AppError(409, "CONFLICT", "A record with the same unique value already exists.", error.meta);
+      return new AppError(409, "CONFLICT", "Data dengan nilai unik yang sama sudah ada.", error.meta);
     }
     if (error.code === "P2003") {
-      return new AppError(409, "CONSTRAINT_ERROR", "This action violates a database constraint.", error.meta);
+      return new AppError(409, "CONSTRAINT_ERROR", "Aksi ini melanggar relasi atau batasan data.", error.meta);
     }
   }
 
@@ -252,7 +252,7 @@ export const prismaErrorToAppError = (error: unknown) => {
     return new AppError(
       503,
       "DATABASE_UNAVAILABLE",
-      "The database schema is unavailable. Run the project schema setup or fallback to a seeded environment.",
+      "Skema database belum tersedia. Jalankan setup schema atau migrasi terlebih dahulu.",
     );
   }
 
@@ -264,7 +264,7 @@ export const prismaErrorToAppError = (error: unknown) => {
     return new AppError(
       503,
       "DATABASE_UNAVAILABLE",
-      "The database connection is unavailable. Check the active backend database configuration and network access.",
+      "Koneksi database tidak tersedia. Periksa konfigurasi Supabase dan akses jaringannya.",
     );
   }
 
@@ -274,8 +274,8 @@ export const prismaErrorToAppError = (error: unknown) => {
     "type" in error &&
     error.type === "entity.too.large"
   ) {
-    return new AppError(413, "PAYLOAD_TOO_LARGE", "Uploaded request body is too large.");
+    return new AppError(413, "PAYLOAD_TOO_LARGE", "Ukuran data yang dikirim terlalu besar.");
   }
 
-  return new AppError(500, "INTERNAL_ERROR", "An unexpected server error occurred.");
+  return new AppError(500, "INTERNAL_ERROR", "Terjadi kesalahan server yang tidak terduga.");
 };

@@ -3,7 +3,7 @@ import { TopBar } from '@/components/layout/TopBar';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useData } from '@/context/DataContext';
-import { CreditCard, History, Megaphone, Settings, LogOut, ChevronRight, User } from 'lucide-react';
+import { CreditCard, History, Megaphone, Settings, LogOut, ChevronRight, User, BarChart3 } from 'lucide-react';
 
 interface AdminMenuScreenProps {
   onNavigate: (screen: string) => void;
@@ -16,6 +16,7 @@ export const AdminMenuScreen: React.FC<AdminMenuScreenProps> = ({ onNavigate, on
 
   const menuItems = [
     { id: 'admin_master_data', label: 'Master Data', icon: Settings, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { id: 'admin_laporan', label: 'Laporan', icon: BarChart3, color: 'text-sky-600', bg: 'bg-sky-50' },
     { id: 'admin_pinjaman_aktif', label: 'Pinjaman Aktif', icon: CreditCard, color: 'text-orange-600', bg: 'bg-orange-50' },
     { id: 'admin_transaksi', label: 'Semua Transaksi', icon: History, color: 'text-blue-600', bg: 'bg-blue-50' },
     { id: 'admin_pengumuman', label: 'Kelola Pengumuman', icon: Megaphone, color: 'text-purple-600', bg: 'bg-purple-50' },

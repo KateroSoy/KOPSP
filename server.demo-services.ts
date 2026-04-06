@@ -1,9 +1,17 @@
 import type {
+  ArrearsReport,
   AppServices,
+  CashflowReport,
+  DailyTransactionsReport,
+  InstallmentReport,
   LoanApplicationItem,
   LoanListItem,
+  LoanReport,
+  MemberDetailReport,
   MemberDashboard,
+  MemberReport,
   MemberListItem,
+  SavingsReport,
   NotificationItem,
   SavingsProductItem,
   TransactionItem,
@@ -39,6 +47,7 @@ type DemoLoan = Omit<LoanListItem, "status"> & {
   statusCode: InternalLoanStatus;
   userId: string;
   loanProductId: string;
+  dateDisbursed: string;
 };
 
 type DemoTransaction = TransactionItem & {
@@ -247,6 +256,7 @@ const createDemoStore = (): DemoStore => ({
       memberId: "KSP-10248",
       userId: "member-1",
       name: "Budi Santoso",
+      dateDisbursed: "2026-02-12",
       amount: 7500000,
       remaining: 5000000,
       installment: 750000,
@@ -261,6 +271,7 @@ const createDemoStore = (): DemoStore => ({
       memberId: "KSP-10601",
       userId: "member-3",
       name: "Ahmad Fauzi",
+      dateDisbursed: "2026-04-01",
       amount: 10000000,
       remaining: 10000000,
       installment: 516667,
@@ -275,6 +286,7 @@ const createDemoStore = (): DemoStore => ({
       memberId: "KSP-10002",
       userId: "member-5",
       name: "Joko Anwar",
+      dateDisbursed: "2025-11-10",
       amount: 15000000,
       remaining: 2000000,
       installment: 1500000,
@@ -532,6 +544,37 @@ const fanOutAnnouncementNotifications = (
       read: false,
     });
   }
+};
+
+const getCurrentMonth = () => getToday().slice(0, 7);
+
+const getDefaultRange = () => {
+  const month = getCurrentMonth();
+  return {
+    startDate: `${month}-01`,
+    endDate: `${month}-31`,
+  };
+};
+
+const isWithinRange = (value: string, startDate?: string, endDate?: string) =>
+  (!startDate || value >= startDate) && (!endDate || value <= endDate);
+
+const getDaysOverdue = (value: string) => {
+  const today = new Date(getToday());
+  const dueDate = new Date(value);
+  return Math.max(0, Math.floor((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24)));
+};
+
+const getAgingBucket = (daysOverdue: number) => {
+  if (daysOverdue <= 7) return "1–7 hari" as const;
+  if (daysOverdue <= 30) return "8–30 hari" as const;
+  return "Lebih dari 30 hari" as const;
+};
+
+const containsQuery = (...values: Array<string | null | undefined>) => (query?: string) => {
+  if (!query) return true;
+  const normalized = query.trim().toLowerCase();
+  return values.some((value) => value?.toLowerCase().includes(normalized));
 };
 
 export const createDemoServices = (): AppServices => {
@@ -964,6 +1007,7 @@ export const createDemoServices = (): AppServices => {
             memberId: application.memberId,
             userId: application.userId,
             name: application.name,
+            dateDisbursed: getToday(),
             amount: application.amount,
             remaining: application.amount,
             installment: application.estimatedInstallment,
@@ -989,6 +1033,548 @@ export const createDemoServices = (): AppServices => {
       async listLoans(userId) {
         getAdminOrThrow(store, userId);
         return clone(listAdminLoans(store));
+      },
+      async getSummaryReport(userId, filters) {
+        getAdminOrThrow(store, userId);
+        const range = {
+          ...getDefaultRange(),
+          ...filters,
+        };
+        const currentMonth = getCurrentMonth();
+        const activeMembers = store.users.filter(
+          (user) => user.role === "member" && user.status === "Aktif",
+        ).length;
+        const totalSavings = listAdminMembers(store).reduce((sum, item) => sum + item.totalSavings, 0);
+        const activeLoans = store.loans.filter((loan) => isActiveLoanStatus(loan.statusCode));
+        const delinquentLoans = activeLoans.filter((loan) => loan.statusCode === "DELINQUENT");
+        const installmentsToday = store.transactions
+          .filter((item) => item.category === "pinjaman" && item.date === getToday())
+          .reduce((sum, item) => sum + item.amount, 0);
+        const savingsThisMonth = store.transactions
+          .filter((item) => item.category === "simpanan" && item.date.startsWith(currentMonth))
+          .reduce((sum, item) => sum + item.amount, 0);
+        const loansThisMonth = store.loans
+          .filter((loan) => loan.dateDisbursed.startsWith(currentMonth))
+          .reduce((sum, loan) => sum + loan.amount, 0);
+
+        return clone({
+          period: {
+            startDate: range.startDate,
+            endDate: range.endDate,
+            label:
+              filters.startDate || filters.endDate
+                ? `${range.startDate} s.d. ${range.endDate}`
+                : "Bulan ini",
+          },
+          metrics: {
+            totalActiveMembers: activeMembers,
+            totalSavings,
+            totalActiveLoans: activeLoans.reduce((sum, loan) => sum + loan.remaining, 0),
+            totalInstallmentsToday: installmentsToday,
+            totalArrears: delinquentLoans.reduce((sum, loan) => sum + loan.installment, 0),
+            cashBalance:
+              store.transactions.reduce((sum, item) => sum + item.amount, 0) -
+              store.loans.reduce((sum, loan) => sum + loan.amount, 0),
+            loansDisbursedThisMonth: loansThisMonth,
+            savingsInThisMonth: savingsThisMonth,
+          },
+          quickStats: {
+            pendingApplications: store.loanApplications.filter(
+              (item) => item.statusCode === "NEW" || item.statusCode === "UNDER_REVIEW",
+            ).length,
+            dueToday: activeLoans.filter((loan) => loan.nextDueDate === getToday()).length,
+            delinquentLoans: delinquentLoans.length,
+            inactiveMembers: store.users.filter(
+              (user) => user.role === "member" && user.status === "Nonaktif",
+            ).length,
+          },
+          recentTransactions: store.transactions.slice(0, 5),
+          latestApplications: store.loanApplications.slice(0, 5).map(mapLoanApplication),
+        });
+      },
+      async getMembersReport(userId, filters) {
+        getAdminOrThrow(store, userId);
+        const items: MemberReport["items"] = listAdminMembers(store)
+          .map((member) => {
+            const memberLoans = store.loans.filter(
+              (loan) => loan.memberId === member.id && isActiveLoanStatus(loan.statusCode),
+            );
+            const delinquencyStatus: MemberReport["items"][number]["delinquencyStatus"] = memberLoans.some((loan) => loan.statusCode === "DELINQUENT")
+              ? "Menunggak"
+              : memberLoans.length > 0
+                ? "Lancar"
+                : "Tanpa Pinjaman";
+            return {
+              memberCode: member.id,
+              name: member.name,
+              phone: member.phone,
+              joinedDate: "2026-01-01",
+              status: member.status,
+              totalSavings: member.totalSavings,
+              activeLoanCount: memberLoans.length,
+              activeLoanAmount: memberLoans.reduce((sum, loan) => sum + loan.remaining, 0),
+              delinquencyStatus,
+            };
+          })
+          .filter((item) => {
+            const matchesQuery = containsQuery(item.memberCode, item.name, item.phone)(filters.query);
+            const matchesStatus =
+              !filters.status || filters.status === "Semua" || item.status === filters.status;
+            const matchesLoanStatus =
+              !filters.loanStatus ||
+              filters.loanStatus === "Semua" ||
+              (filters.loanStatus === "Ada Pinjaman" ? item.activeLoanCount > 0 : item.activeLoanCount === 0);
+            const matchesDelinquency =
+              !filters.delinquencyStatus ||
+              filters.delinquencyStatus === "Semua" ||
+              item.delinquencyStatus === filters.delinquencyStatus;
+
+            return matchesQuery && matchesStatus && matchesLoanStatus && matchesDelinquency;
+          });
+
+        return clone({
+          summary: {
+            totalMembers: items.length,
+            activeMembers: items.filter((item) => item.status === "Aktif").length,
+            inactiveMembers: items.filter((item) => item.status === "Nonaktif").length,
+            membersWithActiveLoans: items.filter((item) => item.activeLoanCount > 0).length,
+            membersInArrears: items.filter((item) => item.delinquencyStatus === "Menunggak").length,
+          },
+          items,
+        });
+      },
+      async getSavingsReport(userId, filters) {
+        getAdminOrThrow(store, userId);
+        const range = {
+          ...getDefaultRange(),
+          ...filters,
+        };
+        const transactions: SavingsReport["transactions"] = store.transactions
+          .filter((item) => item.category === "simpanan")
+          .filter((item) => isWithinRange(item.date, range.startDate, range.endDate))
+          .map((item) => ({
+            id: item.id,
+            transactionCode: item.id.toUpperCase(),
+            date: item.date,
+            memberCode: item.memberCode,
+            memberName: item.memberName,
+            savingsType: (item.type.includes("Wajib")
+              ? "Simpanan Wajib"
+              : item.type.includes("Pokok")
+                ? "Simpanan Pokok"
+                : "Simpanan Sukarela") as SavingsReport["transactions"][number]["savingsType"],
+            amount: item.amount,
+            status: item.status,
+          }))
+          .filter((item) =>
+            !filters.memberCode ? true : item.memberCode === filters.memberCode,
+          )
+          .filter((item) =>
+            !filters.savingsType || filters.savingsType === "Semua"
+              ? true
+              : item.savingsType === filters.savingsType,
+          );
+
+        const memberTotals: SavingsReport["memberTotals"] = listAdminMembers(store)
+          .filter((member) => !filters.memberCode || member.id === filters.memberCode)
+          .map((member) => {
+            const balances = store.memberBalances[member.id] ?? {};
+            const pokok = balances["JS-001"] ?? 0;
+            const wajib = balances["JS-002"] ?? 0;
+            const sukarela = balances["JS-003"] ?? 0;
+            return {
+              memberCode: member.id,
+              memberName: member.name,
+              pokok,
+              wajib,
+              sukarela,
+              total: pokok + wajib + sukarela,
+            };
+          });
+
+        return clone({
+          summary: {
+            periodTotal: transactions.reduce((sum, item) => sum + item.amount, 0),
+            totalPokok: memberTotals.reduce((sum, item) => sum + item.pokok, 0),
+            totalWajib: memberTotals.reduce((sum, item) => sum + item.wajib, 0),
+            totalSukarela: memberTotals.reduce((sum, item) => sum + item.sukarela, 0),
+            transactionCount: transactions.length,
+          },
+          transactions,
+          memberTotals,
+        });
+      },
+      async getLoansReport(userId, filters) {
+        getAdminOrThrow(store, userId);
+        const range = {
+          ...getDefaultRange(),
+          ...filters,
+        };
+        const items: LoanReport["items"] = store.loans
+          .filter((loan) => isWithinRange(loan.dateDisbursed, range.startDate, range.endDate))
+          .map((loan) => ({
+            loanId: loan.id,
+            loanCode: loan.id.toUpperCase(),
+            memberCode: loan.memberId,
+            memberName: loan.name,
+            dateDisbursed: loan.dateDisbursed,
+            principalAmount: loan.amount,
+            remainingAmount: loan.remaining,
+            installmentAmount: loan.installment,
+            tenor: loan.tenor,
+            paidMonths: loan.paidMonths,
+            status: (loan.statusCode === "DELINQUENT"
+              ? "Menunggak"
+              : loan.statusCode === "COMPLETED"
+                ? "Lunas"
+                : "Lancar") as LoanReport["items"][number]["status"],
+          }))
+          .filter((item) => containsQuery(item.loanCode, item.memberCode, item.memberName)(filters.query))
+          .filter((item) =>
+            !filters.status || filters.status === "Semua" ? true : item.status === filters.status,
+          );
+
+        return clone({
+          summary: {
+            activeCount: items.filter((item) => item.status !== "Lunas").length,
+            completedCount: items.filter((item) => item.status === "Lunas").length,
+            disbursedTotal: items.reduce((sum, item) => sum + item.principalAmount, 0),
+            remainingTotal: items.reduce((sum, item) => sum + item.remainingAmount, 0),
+            delinquentCount: items.filter((item) => item.status === "Menunggak").length,
+          },
+          items,
+        });
+      },
+      async getInstallmentsReport(userId, filters) {
+        getAdminOrThrow(store, userId);
+        const range = {
+          ...getDefaultRange(),
+          ...filters,
+        };
+        const payments: InstallmentReport["payments"] = store.transactions
+          .filter((item) => item.category === "pinjaman")
+          .filter((item) => isWithinRange(item.date, range.startDate, range.endDate))
+          .map((item) => ({
+            paymentId: item.id,
+            paymentCode: item.id.toUpperCase(),
+            loanCode: item.loanId?.toUpperCase() ?? "-",
+            memberCode: item.memberCode,
+            memberName: item.memberName,
+            paymentDate: item.date,
+            amount: item.amount,
+            method: "Tunai" as const,
+            status: "Berhasil" as const,
+            note: null,
+          }))
+          .filter((item) => containsQuery(item.loanCode, item.memberCode, item.memberName)(filters.query))
+          .filter((item) => !filters.loanCode || item.loanCode === filters.loanCode.toUpperCase())
+          .filter((item) =>
+            !filters.status || filters.status === "Semua" || filters.status === "Berhasil",
+          );
+
+        const dueItems: InstallmentReport["dueItems"] = store.loans
+          .filter((loan) => isActiveLoanStatus(loan.statusCode))
+          .map((loan) => ({
+            loanId: loan.id,
+            loanCode: loan.id.toUpperCase(),
+            memberCode: loan.memberId,
+            memberName: loan.name,
+            nextDueDate: loan.nextDueDate,
+            installmentAmount: loan.installment,
+            status: (
+              loan.statusCode === "DELINQUENT"
+                ? "Menunggak"
+                : loan.nextDueDate <= getToday()
+                  ? "Jatuh Tempo"
+                  : "Lancar") as InstallmentReport["dueItems"][number]["status"],
+          }))
+          .filter((item) => containsQuery(item.loanCode, item.memberCode, item.memberName)(filters.query))
+          .filter((item) => !filters.loanCode || item.loanCode === filters.loanCode.toUpperCase())
+          .filter((item) =>
+            !filters.status || filters.status === "Semua"
+              ? true
+              : filters.status === "Berhasil"
+                ? item.status === "Lancar"
+                : item.status === filters.status,
+          );
+
+        return clone({
+          summary: {
+            paymentsToday: store.transactions
+              .filter((item) => item.category === "pinjaman" && item.date === getToday())
+              .reduce((sum, item) => sum + item.amount, 0),
+            paymentsThisMonth: store.transactions
+              .filter((item) => item.category === "pinjaman" && item.date.startsWith(getCurrentMonth()))
+              .reduce((sum, item) => sum + item.amount, 0),
+            paymentCount: payments.length,
+            dueSoonCount: dueItems.filter((item) => item.status !== "Lancar").length,
+          },
+          payments,
+          dueItems,
+        });
+      },
+      async getArrearsReport(userId, filters) {
+        getAdminOrThrow(store, userId);
+        const items: ArrearsReport["items"] = store.loans
+          .filter((loan) => loan.statusCode === "DELINQUENT" || loan.nextDueDate < getToday())
+          .map((loan) => {
+            const daysOverdue = Math.max(1, getDaysOverdue(loan.nextDueDate));
+            return {
+              loanId: loan.id,
+              loanCode: loan.id.toUpperCase(),
+              memberCode: loan.memberId,
+              memberName: loan.name,
+              nextDueDate: loan.nextDueDate,
+              daysOverdue,
+              agingBucket: getAgingBucket(daysOverdue),
+              amountDue: loan.installment,
+              remainingAmount: loan.remaining,
+              status: "Menunggak" as const,
+            };
+          })
+          .filter((item) => containsQuery(item.loanCode, item.memberCode, item.memberName)(filters.query))
+          .filter((item) =>
+            !filters.agingBucket || filters.agingBucket === "Semua"
+              ? true
+              : item.agingBucket === filters.agingBucket,
+          );
+
+        return clone({
+          summary: {
+            totalLoans: items.length,
+            totalMembers: new Set(items.map((item) => item.memberCode)).size,
+            totalAmountDue: items.reduce((sum, item) => sum + item.amountDue, 0),
+            bucket1To7: items.filter((item) => item.agingBucket === "1–7 hari").length,
+            bucket8To30: items.filter((item) => item.agingBucket === "8–30 hari").length,
+            bucketAbove30: items.filter((item) => item.agingBucket === "Lebih dari 30 hari").length,
+          },
+          items,
+        });
+      },
+      async getCashflowReport(userId, filters) {
+        getAdminOrThrow(store, userId);
+        const range = {
+          ...getDefaultRange(),
+          ...filters,
+        };
+        const allItems: CashflowReport["items"] = [
+          ...store.transactions.map((item) => ({
+            code: item.id.toUpperCase(),
+            date: item.date,
+            category: (item.category === "simpanan" ? "Simpanan Masuk" : "Angsuran Masuk") as CashflowReport["items"][number]["category"],
+            direction: "Masuk" as const,
+            amount: item.amount,
+            memberName: item.memberName,
+            description: item.type,
+          })),
+          ...store.loans.map((loan) => ({
+            code: loan.id.toUpperCase(),
+            date: loan.dateDisbursed,
+            category: "Pencairan Pinjaman" as const,
+            direction: "Keluar" as const,
+            amount: loan.amount,
+            memberName: loan.name,
+            description: `Pencairan pinjaman ${loan.id.toUpperCase()}`,
+          })),
+        ];
+
+        const items: CashflowReport["items"] = allItems.filter((item) =>
+          isWithinRange(item.date, range.startDate, range.endDate),
+        )
+        .filter((item) =>
+          !filters.category || filters.category === "Semua" ? true : item.category === filters.category,
+        )
+        .filter((item) =>
+          !filters.direction || filters.direction === "Semua" ? true : item.direction === filters.direction,
+        )
+        .sort((left, right) => right.date.localeCompare(left.date));
+
+        const previousItems = allItems.filter((item) => item.date < range.startDate);
+        const openingBalance = previousItems.reduce(
+          (sum, item) => sum + (item.direction === "Masuk" ? item.amount : -item.amount),
+          0,
+        );
+        const cashIn = items
+          .filter((item) => item.direction === "Masuk")
+          .reduce((sum, item) => sum + item.amount, 0);
+        const cashOut = items
+          .filter((item) => item.direction === "Keluar")
+          .reduce((sum, item) => sum + item.amount, 0);
+
+        return clone({
+          summary: {
+            openingBalance,
+            cashIn,
+            cashOut,
+            closingBalance: openingBalance + cashIn - cashOut,
+          },
+          items,
+        });
+      },
+      async getDailyTransactionsReport(userId, filters) {
+        getAdminOrThrow(store, userId);
+        const selectedDate = filters.date ?? getToday();
+        const savingsItems = store.transactions.filter(
+          (item) => item.category === "simpanan" && item.date === selectedDate,
+        );
+        const paymentItems = store.transactions.filter(
+          (item) => item.category === "pinjaman" && item.date === selectedDate,
+        );
+        const disbursedItems = store.loans.filter((loan) => loan.dateDisbursed === selectedDate);
+
+        const items: DailyTransactionsReport["items"] = [
+          ...savingsItems.map((item) => ({
+            code: item.id.toUpperCase(),
+            timeLabel: "09.00",
+            type: item.type,
+            memberName: item.memberName,
+            amount: item.amount,
+            direction: "Masuk" as const,
+            status: item.status,
+          })),
+          ...paymentItems.map((item) => ({
+            code: item.id.toUpperCase(),
+            timeLabel: "11.00",
+            type: item.type,
+            memberName: item.memberName,
+            amount: item.amount,
+            direction: "Masuk" as const,
+            status: item.status,
+          })),
+          ...disbursedItems.map((loan) => ({
+            code: loan.id.toUpperCase(),
+            timeLabel: "14.00",
+            type: "Pencairan Pinjaman",
+            memberName: loan.name,
+            amount: loan.amount,
+            direction: "Keluar" as const,
+            status: "Berhasil",
+          })),
+        ];
+
+        const savingsIn = savingsItems.reduce((sum, item) => sum + item.amount, 0);
+        const installmentsPaid = paymentItems.reduce((sum, item) => sum + item.amount, 0);
+        const loansDisbursed = disbursedItems.reduce((sum, item) => sum + item.amount, 0);
+
+        return clone({
+          date: selectedDate,
+          summary: {
+            savingsIn,
+            loansDisbursed,
+            installmentsPaid,
+            cashIn: savingsIn + installmentsPaid,
+            cashOut: loansDisbursed,
+            transactionCount: items.length,
+          },
+          items,
+        });
+      },
+      async getMonthlyRecapReport(userId, filters) {
+        getAdminOrThrow(store, userId);
+        const month = filters.month ?? getCurrentMonth();
+        const totalSavings = store.transactions
+          .filter((item) => item.category === "simpanan" && item.date.startsWith(month))
+          .reduce((sum, item) => sum + item.amount, 0);
+        const totalInstallments = store.transactions
+          .filter((item) => item.category === "pinjaman" && item.date.startsWith(month))
+          .reduce((sum, item) => sum + item.amount, 0);
+        const totalLoansDisbursed = store.loans
+          .filter((loan) => loan.dateDisbursed.startsWith(month))
+          .reduce((sum, loan) => sum + loan.amount, 0);
+        const totalArrears = store.loans
+          .filter((loan) => loan.statusCode === "DELINQUENT")
+          .reduce((sum, loan) => sum + loan.installment, 0);
+
+        return clone({
+          month,
+          summary: {
+            totalSavings,
+            totalLoansDisbursed,
+            totalInstallments,
+            totalArrears,
+            cashIn: totalSavings + totalInstallments,
+            cashOut: totalLoansDisbursed,
+            newMembers: 1,
+          },
+        });
+      },
+      async getMemberDetailReport(userId, memberCode) {
+        getAdminOrThrow(store, userId);
+        const member = store.users.find((item) => item.memberId === memberCode && item.role === "member");
+        if (!member) {
+          throw new AppError(404, "MEMBER_NOT_FOUND", "Data anggota tidak ditemukan.");
+        }
+
+        const balances = store.memberBalances[memberCode] ?? {};
+        const activeLoans = store.loans.filter(
+          (loan) => loan.memberId === memberCode && isActiveLoanStatus(loan.statusCode),
+        );
+        const paymentHistory: MemberDetailReport["paymentHistory"] = store.transactions
+          .filter((item) => item.memberCode === memberCode && item.category === "pinjaman")
+          .map((item) => ({
+            paymentId: item.id,
+            paymentCode: item.id.toUpperCase(),
+            loanCode: item.loanId?.toUpperCase() ?? "-",
+            memberCode,
+            memberName: member.name,
+            paymentDate: item.date,
+            amount: item.amount,
+            method: "Tunai" as const,
+            status: "Berhasil" as const,
+            note: null,
+          }));
+
+        return clone({
+          member: {
+            memberCode,
+            name: member.name,
+            phone: member.phone,
+            status: member.status ?? "Aktif",
+            joinedDate: "2026-01-01",
+            email: member.email,
+            address: member.address,
+          },
+          summary: {
+            totalSavings: (balances["JS-001"] ?? 0) + (balances["JS-002"] ?? 0) + (balances["JS-003"] ?? 0),
+            totalLoans: store.loans
+              .filter((loan) => loan.memberId === memberCode)
+              .reduce((sum, loan) => sum + loan.amount, 0),
+            activeLoanCount: activeLoans.length,
+            activeLoanAmount: activeLoans.reduce((sum, loan) => sum + loan.amount, 0),
+            remainingLoan: activeLoans.reduce((sum, loan) => sum + loan.remaining, 0),
+            delinquencyStatus: activeLoans.some((loan) => loan.statusCode === "DELINQUENT")
+              ? "Menunggak"
+              : activeLoans.length > 0
+                ? "Lancar"
+                : "Tanpa Pinjaman",
+          },
+          savingsBreakdown: {
+            pokok: balances["JS-001"] ?? 0,
+            wajib: balances["JS-002"] ?? 0,
+            sukarela: balances["JS-003"] ?? 0,
+            total: (balances["JS-001"] ?? 0) + (balances["JS-002"] ?? 0) + (balances["JS-003"] ?? 0),
+          },
+          activeLoans: activeLoans.map((loan) => ({
+            loanId: loan.id,
+            loanCode: loan.id.toUpperCase(),
+            memberCode,
+            memberName: member.name,
+            dateDisbursed: loan.dateDisbursed,
+            principalAmount: loan.amount,
+            remainingAmount: loan.remaining,
+            installmentAmount: loan.installment,
+            tenor: loan.tenor,
+            paidMonths: loan.paidMonths,
+            status:
+              loan.statusCode === "DELINQUENT"
+                ? "Menunggak"
+                : loan.statusCode === "COMPLETED"
+                  ? "Lunas"
+                  : "Lancar",
+          })),
+          paymentHistory,
+          recentTransactions: store.transactions.filter((item) => item.memberCode === memberCode).slice(0, 10),
+        });
       },
       async recordLoanPayment(userId, loanId, input) {
         getAdminOrThrow(store, userId);

@@ -327,6 +327,16 @@ npm run test:db
 - `POST /api/member/loan-applications`
 - `GET /api/admin/dashboard`
 - `GET /api/admin/bundle`
+- `GET /api/admin/reports/summary`
+- `GET /api/admin/reports/members`
+- `GET /api/admin/reports/savings`
+- `GET /api/admin/reports/loans`
+- `GET /api/admin/reports/installments`
+- `GET /api/admin/reports/arrears`
+- `GET /api/admin/reports/cashflow`
+- `GET /api/admin/reports/daily-transactions`
+- `GET /api/admin/reports/monthly-recap`
+- `GET /api/admin/reports/member-detail/:memberCode`
 - `GET /api/admin/members`
 - `POST /api/admin/members`
 - `PUT /api/admin/members/:id`

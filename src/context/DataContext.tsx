@@ -81,6 +81,21 @@ const getErrorMessage = (error: unknown) => {
     if (error.code === "DATABASE_UNAVAILABLE") {
       return "Backend aktif, tetapi database belum bisa dihubungi. Periksa koneksi Supabase atau jalankan backend dengan database yang tersedia.";
     }
+    if (error.code === "VALIDATION_ERROR") {
+      const details = error.details as
+        | {
+            formErrors?: string[];
+            fieldErrors?: Record<string, string[] | undefined>;
+          }
+        | undefined;
+      const firstFieldError = details?.fieldErrors
+        ? Object.values(details.fieldErrors)
+            .flat()
+            .find((message): message is string => Boolean(message))
+        : undefined;
+
+      return firstFieldError || details?.formErrors?.[0] || error.message;
+    }
     return error.message;
   }
   if (error instanceof Error) {

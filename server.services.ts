@@ -10,6 +10,7 @@ import {
 } from "@prisma/client";
 import { env } from "./server.config.env.js";
 import { prisma as defaultPrisma } from "./server.db.js";
+import { createAdminReportServices } from "./server.report-services.js";
 import type {
   AppRole,
   AppServices,
@@ -463,6 +464,7 @@ export const createServices = (prisma: PrismaLike = defaultPrisma): AppServices 
     },
   },
   admin: {
+    ...createAdminReportServices(prisma),
     async getDashboard(userId) {
       const user = await getAdminUser(prisma, userId);
 
@@ -644,21 +646,49 @@ export const createServices = (prisma: PrismaLike = defaultPrisma): AppServices 
         throw new AppError(404, "MEMBER_NOT_FOUND", "Member was not found.");
       }
 
-      const [loanCount, applicationCount, transactionCount] = await Promise.all([
-        prisma.loan.count({ where: { memberId: member.id } }),
-        prisma.loanApplication.count({ where: { memberId: member.id } }),
-        prisma.transaction.count({ where: { memberId: member.id } }),
-      ]);
+      await prisma.$transaction(async (tx) => {
+        const [loans, applications] = await Promise.all([
+          tx.loan.findMany({
+            where: { memberId: member.id },
+            select: { id: true },
+          }),
+          tx.loanApplication.findMany({
+            where: { memberId: member.id },
+            select: { id: true },
+          }),
+        ]);
 
-      if (loanCount > 0 || applicationCount > 0 || transactionCount > 0) {
-        throw new AppError(
-          409,
-          "MEMBER_HAS_HISTORY",
-          "Members with transaction or loan history cannot be deleted. Set them inactive instead.",
-        );
-      }
+        const loanIds = loans.map((loan) => loan.id);
+        const applicationIds = applications.map((application) => application.id);
 
-      await prisma.user.delete({ where: { id: member.userId } });
+        if (loanIds.length > 0) {
+          await tx.loanPayment.deleteMany({
+            where: { loanId: { in: loanIds } },
+          });
+          await tx.notification.deleteMany({
+            where: { loanId: { in: loanIds } },
+          });
+        }
+
+        if (applicationIds.length > 0) {
+          await tx.notification.deleteMany({
+            where: { loanApplicationId: { in: applicationIds } },
+          });
+        }
+
+        await tx.transaction.deleteMany({
+          where: { memberId: member.id },
+        });
+        await tx.loan.deleteMany({
+          where: { memberId: member.id },
+        });
+        await tx.loanApplication.deleteMany({
+          where: { memberId: member.id },
+        });
+        await tx.user.delete({
+          where: { id: member.userId },
+        });
+      });
     },
     async listSavingsProducts(userId) {
       await getAdminUser(prisma, userId);

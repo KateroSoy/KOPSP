@@ -22,6 +22,7 @@ import { AdminPinjamanAktifScreen } from './screens/AdminPinjamanAktifScreen';
 import { AdminPengaturanScreen } from './screens/AdminPengaturanScreen';
 import { AdminDetailAnggotaScreen } from './screens/AdminDetailAnggotaScreen';
 import { AdminMasterDataScreen } from './screens/AdminMasterDataScreen';
+import { AdminReportsScreen } from './screens/AdminReportsScreen';
 
 import { BottomNav } from './components/layout/BottomNav';
 import { AdminBottomNav } from './components/layout/AdminBottomNav';
@@ -47,7 +48,8 @@ type Screen =
   | 'admin_pengumuman'
   | 'admin_pinjaman_aktif'
   | 'admin_pengaturan'
-  | 'admin_menu';
+  | 'admin_menu'
+  | 'admin_laporan';
 
 function AppContent() {
   const { authReady, isAuthenticated, role, currentData, logout } = useData();
@@ -118,6 +120,7 @@ function AppContent() {
     else if (tab === 'admin_pinjaman_aktif') setCurrentScreen('admin_pinjaman_aktif');
     else if (tab === 'admin_pengaturan') setCurrentScreen('admin_pengaturan');
     else if (tab === 'admin_master_data') setCurrentScreen('admin_master_data');
+    else if (tab === 'admin_laporan') setCurrentScreen('admin_laporan');
   };
 
   const renderScreen = () => {
@@ -179,6 +182,8 @@ function AppContent() {
         return <AdminPinjamanAktifScreen />;
       case 'admin_pengaturan':
         return <AdminPengaturanScreen />;
+      case 'admin_laporan':
+        return <AdminReportsScreen />;
         
       default:
         return <LoginScreen onLogin={() => {}} />;
@@ -186,7 +191,7 @@ function AppContent() {
   };
 
   const showMemberNav = userRole === 'member' && ['dashboard', 'simpanan', 'pinjaman', 'akun', 'riwayat', 'notifikasi'].includes(currentScreen);
-  const showAdminNav = userRole === 'admin' && ['admin_dashboard', 'admin_anggota', 'admin_detail_anggota', 'admin_master_data', 'admin_pengajuan', 'admin_menu', 'admin_input_pembayaran', 'admin_transaksi', 'admin_pengumuman', 'admin_pinjaman_aktif', 'admin_pengaturan'].includes(currentScreen);
+  const showAdminNav = userRole === 'admin' && ['admin_dashboard', 'admin_anggota', 'admin_detail_anggota', 'admin_master_data', 'admin_pengajuan', 'admin_menu', 'admin_input_pembayaran', 'admin_transaksi', 'admin_pengumuman', 'admin_pinjaman_aktif', 'admin_pengaturan', 'admin_laporan'].includes(currentScreen);
 
   return (
     <div className="font-sans text-gray-900 antialiased selection:bg-emerald-100 selection:text-emerald-900">

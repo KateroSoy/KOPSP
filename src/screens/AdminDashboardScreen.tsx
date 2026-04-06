@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/utils';
 import { useData } from '@/context/DataContext';
-import { Users, Wallet, CreditCard, FileText, ArrowRight, Activity, Megaphone } from 'lucide-react';
+import { Users, Wallet, CreditCard, FileText, ArrowRight, Activity, Megaphone, BarChart3 } from 'lucide-react';
 
 interface AdminDashboardScreenProps {
   onNavigate: (tab: string) => void;
@@ -56,6 +56,24 @@ export const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ onNa
             <span className="text-[10px] font-medium text-gray-700 text-center leading-tight">Buat<br/>Pengumuman</span>
           </button>
         </div>
+
+        <button
+          onClick={() => onNavigate('admin_laporan')}
+          className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-4 text-left shadow-sm transition-colors hover:border-emerald-200"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <BarChart3 size={22} />
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">Modul Laporan</p>
+                <p className="text-xs text-gray-500">Lihat ringkasan, anggota, simpanan, pinjaman, dan kas.</p>
+              </div>
+            </div>
+            <ArrowRight size={18} className="text-emerald-500" />
+          </div>
+        </button>
 
         <div className="grid grid-cols-2 gap-3">
           <Card>
