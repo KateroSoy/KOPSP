@@ -1065,6 +1065,39 @@ export const demoApi = {
       store.announcements = store.announcements.filter((item) => item.id !== id);
       return { deleted: true };
     }),
+  recordSavingsDeposit: (
+    token: string,
+    input: { memberId: string; savingsProductId: string; amount: number; note?: string | null },
+  ) =>
+    withStore((store) => {
+      getAdminOrThrow(store, token);
+      const member = findMemberUser(store, input.memberId);
+      if (!member) throw new DemoApiError("Anggota tidak ditemukan.", 404, "MEMBER_NOT_FOUND");
+      const product = store.savingsProducts.find((item) => item.id === input.savingsProductId);
+      if (!product) throw new DemoApiError("Jenis simpanan tidak ditemukan.", 404, "SAVINGS_PRODUCT_NOT_FOUND");
+      if (input.amount <= 0) throw new DemoApiError("Nominal simpanan harus lebih dari 0.", 400, "INVALID_AMOUNT");
+
+      const balances = store.memberBalances[member.memberId] ?? {};
+      balances[product.id] = (balances[product.id] ?? 0) + input.amount;
+      store.memberBalances[member.memberId] = balances;
+
+      const transaction: DemoTransaction = {
+        id: `trx-${nextCounter(store, "trx")}`,
+        type: `Setoran ${product.name.replace(/^Simpanan\s+/i, "")}`,
+        amount: input.amount,
+        date: today(),
+        status: "Berhasil",
+        category: "simpanan",
+        memberName: member.name,
+        memberCode: member.memberId,
+        savingsProductId: product.id,
+      };
+      store.transactions.unshift(transaction);
+      pushNotification(store, member.id, "Simpanan Bertambah", `Setoran ${product.name} sebesar Rp${input.amount} telah dicatat.`);
+
+      const { memberCode: _memberCode, savingsProductId: _savingsProductId, ...publicTransaction } = transaction;
+      return publicTransaction;
+    }),
   recordLoanPayment: (token: string, id: string, input: { amount: number; method: "Transfer" | "Tunai"; note?: string | null }) =>
     withStore((store) => {
       getAdminOrThrow(store, token);

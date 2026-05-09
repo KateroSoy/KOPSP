@@ -1,25 +1,152 @@
 import React, { useState } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
-import { Card } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { useUiFeedback } from '@/components/ui/FeedbackProvider';
 import { formatRupiah, formatDate } from '@/lib/utils';
-import { useData } from '@/context/DataContext';
-import { Wallet, CreditCard } from 'lucide-react';
+import { getUserFacingError, useData } from '@/context/DataContext';
+import { CreditCard, Plus, Wallet } from 'lucide-react';
 
 export const AdminTransaksiScreen: React.FC = () => {
-  const { currentData: mockData } = useData();
-  const { transactions } = mockData;
+  const { currentData: mockData, addSavingsDeposit } = useData();
+  const { notifyError, notifySuccess, notifyWarning } = useUiFeedback();
+  const { transactions, members, masterData } = mockData as any;
   const [filter, setFilter] = useState<'semua' | 'simpanan' | 'pinjaman'>('semua');
+  const [formOpen, setFormOpen] = useState(false);
+  const [memberId, setMemberId] = useState('');
+  const [savingsProductId, setSavingsProductId] = useState('');
+  const [amount, setAmount] = useState('');
+  const [note, setNote] = useState('');
+  const activeMembers = (members || []).filter((member: any) => member.status === 'Aktif');
+  const savingsProducts = masterData?.jenisSimpanan || [];
 
   const filteredTransactions = transactions?.filter((trx: any) => 
     filter === 'semua' ? true : trx.category === filter
   ) || [];
+
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const numericValue = event.target.value.replace(/\D/g, '');
+    setAmount(numericValue ? formatRupiah(parseInt(numericValue, 10)).replace('Rp', '').trim() : '');
+  };
+
+  const resetForm = () => {
+    setMemberId('');
+    setSavingsProductId('');
+    setAmount('');
+    setNote('');
+  };
+
+  const handleSubmitSavings = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const numericAmount = parseInt(amount.replace(/\D/g, ''), 10) || 0;
+
+    if (!memberId) {
+      notifyWarning('Pilih anggota terlebih dahulu');
+      return;
+    }
+    if (!savingsProductId) {
+      notifyWarning('Pilih jenis simpanan');
+      return;
+    }
+    if (numericAmount <= 0) {
+      notifyWarning('Nominal simpanan harus lebih dari 0');
+      return;
+    }
+
+    try {
+      await addSavingsDeposit({ memberId, savingsProductId, amount: numericAmount, note: note || null });
+      const member = activeMembers.find((item: any) => item.id === memberId);
+      notifySuccess('Simpanan berhasil ditambahkan', `Setoran ${member?.name || 'anggota'} sudah tercatat.`);
+      resetForm();
+      setFormOpen(false);
+      setFilter('simpanan');
+    } catch (error) {
+      notifyError('Gagal menambahkan simpanan', getUserFacingError(error));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Semua Transaksi" />
 
       <div className="p-4 max-w-md mx-auto space-y-4">
+        <Button fullWidth onClick={() => setFormOpen((current) => !current)}>
+          <Plus size={18} className="mr-2" />
+          Tambah Simpanan
+        </Button>
+
+        {formOpen && (
+          <Card>
+            <CardContent className="p-4">
+              <form onSubmit={handleSubmitSavings} className="space-y-4">
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Anggota</label>
+                  <select
+                    value={memberId}
+                    onChange={(event) => setMemberId(event.target.value)}
+                    className="h-12 w-full rounded-xl border border-gray-300 bg-white px-3 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="">Pilih anggota</option>
+                    {activeMembers.map((member: any) => (
+                      <option key={member.id} value={member.id}>
+                        {member.name} - {member.id}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Jenis Simpanan</label>
+                  <select
+                    value={savingsProductId}
+                    onChange={(event) => setSavingsProductId(event.target.value)}
+                    className="h-12 w-full rounded-xl border border-gray-300 bg-white px-3 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="">Pilih jenis simpanan</option>
+                    {savingsProducts.map((product: any) => (
+                      <option key={product.id} value={product.id}>
+                        {product.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Nominal Setoran</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base font-bold text-gray-900">Rp</span>
+                    <input
+                      type="text"
+                      value={amount}
+                      onChange={handleAmountChange}
+                      className="h-12 w-full rounded-xl border border-gray-300 bg-white pl-11 pr-4 text-base font-semibold text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+
+                <Input
+                  label="Catatan (Opsional)"
+                  placeholder="Contoh: Setoran tunai loket"
+                  value={note}
+                  onChange={(event) => setNote(event.target.value)}
+                />
+
+                <div className="grid grid-cols-2 gap-3">
+                  <Button type="button" variant="outline" onClick={() => { resetForm(); setFormOpen(false); }}>
+                    Batal
+                  </Button>
+                  <Button type="submit">
+                    Simpan
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Filters */}
         <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
           {['semua', 'simpanan', 'pinjaman'].map((f) => (

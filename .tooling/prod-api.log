@@ -1,0 +1,191 @@
+
+> simpan-pinjam-mvp@0.0.0 start
+> node build/server/server.index.js
+
+◇ injecting env (10) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+API listening on http://127.0.0.1:4000
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 34.000 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 50.076 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 10.054 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 54.843 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 158.824 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 155.747 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 13.906 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 46.737 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 20.795 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 9.182 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 36.476 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 83.171 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 4.096 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 46.933 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 2.253 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 41.077 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 3.626 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 3.807 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 4.222 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 2.976 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 2.703 ms - 177[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 11.269 ms - 177[0m
+[0mGET /api/health [32m200[0m 9.843 ms - 39[0m
+prisma:error 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+[0mPOST /api/auth/login [31m503[0m 63.966 ms - 177[0m

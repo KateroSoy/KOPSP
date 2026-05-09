@@ -42,6 +42,7 @@ type DataContextType = {
   addAnnouncement: (announcement: { title: string; content: string; isActive: boolean }) => Promise<void>;
   editAnnouncement: (announcement: { id: string; title: string; content: string; isActive: boolean }) => Promise<void>;
   deleteAnnouncement: (id: string) => Promise<void>;
+  addSavingsDeposit: (input: { memberId: string; savingsProductId: string; amount: number; note?: string | null }) => Promise<void>;
   addPayment: (loanId: string, amount: number, method: "Transfer" | "Tunai", note?: string | null) => Promise<void>;
   markNotificationRead: (notifId: string) => Promise<void>;
   addMember: (member: { name: string; phone: string; password: string; status: "Aktif" | "Nonaktif" }) => Promise<void>;
@@ -214,6 +215,9 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     },
     async deleteAnnouncement(id) {
       await withRefresh((activeSession) => api.deleteAnnouncement(activeSession.token, id));
+    },
+    async addSavingsDeposit(input) {
+      await withRefresh((activeSession) => api.recordSavingsDeposit(activeSession.token, input));
     },
     async addPayment(loanId, amount, method, note) {
       await withRefresh((activeSession) =>

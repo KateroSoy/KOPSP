@@ -1,0 +1,408 @@
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parse (D:\digital product\SASS\simpan-pinjam\node_modules\body-parser\lib\types\json.js:92:19)
+    at D:\digital product\SASS\simpan-pinjam\node_modules\body-parser\lib\read.js:128:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+    at invokeCallback (D:\digital product\SASS\simpan-pinjam\node_modules\raw-body\index.js:238:16)
+    at done (D:\digital product\SASS\simpan-pinjam\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (D:\digital product\SASS\simpan-pinjam\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:518:28)
+    at endReadableNT (node:internal/streams/readable:1698:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  expose: true,
+  statusCode: 400,
+  status: 400,
+  body: '{\\',
+  type: 'entity.parse.failed'
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}
+PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Can't reach database server at `db.sldhyuimolzgcgojywfz.supabase.co:5432`
+
+Please make sure your database server is running at `db.sldhyuimolzgcgojywfz.supabase.co:5432`.
+    at ei.handleRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:7568)
+    at ei.handleAndLogRequestError (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (D:\digital product\SASS\simpan-pinjam\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.login (file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.services.js:171:26)
+    at async file:///D:/digital%20product/SASS/simpan-pinjam/build/server/server.app.js:45:17 {
+  clientVersion: '6.19.3',
+  errorCode: undefined,
+  retryable: undefined
+}

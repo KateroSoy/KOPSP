@@ -771,6 +771,18 @@ const remoteApi = {
       },
       token,
     ),
+  recordSavingsDeposit: (
+    token: string,
+    input: { memberId: string; savingsProductId: string; amount: number; note?: string | null },
+  ) =>
+    request<TransactionItem>(
+      "/api/admin/savings-deposits",
+      {
+        method: "POST",
+        body: JSON.stringify(input),
+      },
+      token,
+    ),
   recordLoanPayment: (
     token: string,
     id: string,
