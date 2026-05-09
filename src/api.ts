@@ -1,3 +1,5 @@
+import { demoApi, isDemoMode } from "@/data/demoApi";
+
 export type AppRole = "admin" | "member";
 
 export type UserSummary = {
@@ -468,7 +470,7 @@ export const clearSession = () => {
   localStorage.removeItem(SESSION_KEY);
 };
 
-export const api = {
+const remoteApi = {
   login: (input: { phone: string; password: string }) =>
     request<{ token: string; user: UserSummary }>("/api/auth/login", {
       method: "POST",
@@ -793,5 +795,7 @@ export const api = {
       token,
     ),
 };
+
+export const api = isDemoMode ? demoApi : remoteApi;
 
 

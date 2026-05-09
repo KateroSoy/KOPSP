@@ -1,0 +1,387 @@
+{
+  "accounts": [
+    {
+      "id": "admin-1",
+      "role": "admin",
+      "phone": "08111111111",
+      "password": "admin",
+      "label": "Admin Demo"
+    },
+    {
+      "id": "member-1",
+      "role": "member",
+      "phone": "08222222222",
+      "password": "user",
+      "label": "Anggota Demo"
+    }
+  ],
+  "store": {
+    "users": [
+      {
+        "id": "admin-1",
+        "role": "admin",
+        "name": "Siti Rahma",
+        "phone": "08111111111",
+        "email": "admin@koperasi.demo",
+        "address": "Kantor Pusat KSP Mandiri",
+        "memberId": "ADM-001",
+        "password": "admin",
+        "joinedDate": "2024-01-10"
+      },
+      {
+        "id": "member-1",
+        "role": "member",
+        "name": "Budi Santoso",
+        "phone": "08222222222",
+        "email": "budi@koperasi.demo",
+        "address": "Jl. Merdeka No. 45, Jakarta",
+        "memberId": "KSP-10248",
+        "password": "user",
+        "status": "Aktif",
+        "joinedDate": "2024-08-12"
+      },
+      {
+        "id": "member-2",
+        "role": "member",
+        "name": "Siti Aminah",
+        "phone": "08333333333",
+        "email": "siti.aminah@koperasi.demo",
+        "address": "Jl. Sudirman No. 10, Jakarta",
+        "memberId": "KSP-10555",
+        "password": "user",
+        "status": "Aktif",
+        "joinedDate": "2025-02-15"
+      },
+      {
+        "id": "member-3",
+        "role": "member",
+        "name": "Ahmad Fauzi",
+        "phone": "08444444444",
+        "email": "ahmad@koperasi.demo",
+        "address": "Jl. Kebon Sirih No. 22, Jakarta",
+        "memberId": "KSP-10601",
+        "password": "user",
+        "status": "Aktif",
+        "joinedDate": "2025-08-20"
+      },
+      {
+        "id": "member-4",
+        "role": "member",
+        "name": "Dewi Lestari",
+        "phone": "08555555555",
+        "email": "dewi@koperasi.demo",
+        "address": "Jl. Cikini No. 8, Jakarta",
+        "memberId": "KSP-10602",
+        "password": "user",
+        "status": "Nonaktif",
+        "joinedDate": "2026-01-18"
+      },
+      {
+        "id": "member-5",
+        "role": "member",
+        "name": "Joko Anwar",
+        "phone": "08666666666",
+        "email": "joko@koperasi.demo",
+        "address": "Jl. Diponegoro No. 12, Jakarta",
+        "memberId": "KSP-10002",
+        "password": "user",
+        "status": "Aktif",
+        "joinedDate": "2024-04-04"
+      }
+    ],
+    "savingsProducts": [
+      {
+        "id": "JS-001",
+        "name": "Simpanan Pokok",
+        "amount": 500000,
+        "isMandatory": true
+      },
+      {
+        "id": "JS-002",
+        "name": "Simpanan Wajib",
+        "amount": 50000,
+        "isMandatory": true
+      },
+      {
+        "id": "JS-003",
+        "name": "Simpanan Sukarela",
+        "amount": 0,
+        "isMandatory": false
+      }
+    ],
+    "loanProducts": [
+      {
+        "id": "JP-001",
+        "name": "Pinjaman Reguler",
+        "maxAmount": 10000000,
+        "interestRate": 2,
+        "adminFeeRate": 1,
+        "maxTenor": 24,
+        "isActive": true
+      },
+      {
+        "id": "JP-002",
+        "name": "Pinjaman Usaha",
+        "maxAmount": 50000000,
+        "interestRate": 1.5,
+        "adminFeeRate": 1,
+        "maxTenor": 36,
+        "isActive": true
+      }
+    ],
+    "memberBalances": {
+      "KSP-10248": {
+        "JS-001": 500000,
+        "JS-002": 1250000,
+        "JS-003": 3800000
+      },
+      "KSP-10555": {
+        "JS-001": 500000,
+        "JS-002": 500000,
+        "JS-003": 1000000
+      },
+      "KSP-10601": {
+        "JS-001": 500000,
+        "JS-002": 500000,
+        "JS-003": 500000
+      },
+      "KSP-10602": {
+        "JS-001": 500000,
+        "JS-002": 0,
+        "JS-003": 0
+      },
+      "KSP-10002": {
+        "JS-001": 500000,
+        "JS-002": 750000,
+        "JS-003": 0
+      }
+    },
+    "loanApplications": [
+      {
+        "id": "app-1",
+        "memberId": "KSP-10555",
+        "userId": "member-2",
+        "name": "Siti Aminah",
+        "amount": 5000000,
+        "tenor": 12,
+        "purpose": "Modal usaha warung",
+        "date": "2026-05-02",
+        "statusCode": "NEW",
+        "estimatedInstallment": 458334,
+        "reviewNote": null,
+        "loanProductId": "JP-001"
+      },
+      {
+        "id": "app-2",
+        "memberId": "KSP-10601",
+        "userId": "member-3",
+        "name": "Ahmad Fauzi",
+        "amount": 10000000,
+        "tenor": 24,
+        "purpose": "Renovasi rumah",
+        "date": "2026-04-01",
+        "statusCode": "APPROVED",
+        "estimatedInstallment": 516667,
+        "reviewNote": null,
+        "loanProductId": "JP-001"
+      },
+      {
+        "id": "app-3",
+        "memberId": "KSP-10602",
+        "userId": "member-4",
+        "name": "Dewi Lestari",
+        "amount": 2000000,
+        "tenor": 6,
+        "purpose": "Biaya pendidikan",
+        "date": "2026-03-28",
+        "statusCode": "REJECTED",
+        "estimatedInstallment": 353334,
+        "reviewNote": "Status anggota belum aktif.",
+        "loanProductId": "JP-002"
+      }
+    ],
+    "loans": [
+      {
+        "id": "loan-1",
+        "memberId": "KSP-10248",
+        "userId": "member-1",
+        "name": "Budi Santoso",
+        "dateDisbursed": "2026-02-12",
+        "amount": 7500000,
+        "remaining": 5000000,
+        "installment": 750000,
+        "nextDueDate": "2026-05-12",
+        "tenor": 10,
+        "paidMonths": 3,
+        "statusCode": "ACTIVE",
+        "loanProductId": "JP-001"
+      },
+      {
+        "id": "loan-2",
+        "memberId": "KSP-10601",
+        "userId": "member-3",
+        "name": "Ahmad Fauzi",
+        "dateDisbursed": "2026-04-01",
+        "amount": 10000000,
+        "remaining": 10000000,
+        "installment": 516667,
+        "nextDueDate": "2026-05-01",
+        "tenor": 24,
+        "paidMonths": 0,
+        "statusCode": "ACTIVE",
+        "loanProductId": "JP-001"
+      },
+      {
+        "id": "loan-3",
+        "memberId": "KSP-10002",
+        "userId": "member-5",
+        "name": "Joko Anwar",
+        "dateDisbursed": "2025-11-10",
+        "amount": 15000000,
+        "remaining": 2000000,
+        "installment": 1500000,
+        "nextDueDate": "2026-04-10",
+        "tenor": 12,
+        "paidMonths": 10,
+        "statusCode": "DELINQUENT",
+        "loanProductId": "JP-002"
+      }
+    ],
+    "transactions": [
+      {
+        "id": "trx-1",
+        "type": "Setoran Wajib",
+        "amount": 50000,
+        "date": "2026-05-01",
+        "status": "Berhasil",
+        "category": "simpanan",
+        "memberName": "Budi Santoso",
+        "memberCode": "KSP-10248",
+        "savingsProductId": "JS-002"
+      },
+      {
+        "id": "trx-2",
+        "type": "Angsuran Pinjaman",
+        "amount": 750000,
+        "date": "2026-04-12",
+        "status": "Berhasil",
+        "category": "pinjaman",
+        "memberName": "Budi Santoso",
+        "memberCode": "KSP-10248",
+        "loanId": "loan-1"
+      },
+      {
+        "id": "trx-3",
+        "type": "Setoran Sukarela",
+        "amount": 200000,
+        "date": "2026-04-05",
+        "status": "Berhasil",
+        "category": "simpanan",
+        "memberName": "Budi Santoso",
+        "memberCode": "KSP-10248",
+        "savingsProductId": "JS-003"
+      },
+      {
+        "id": "trx-4",
+        "type": "Setoran Wajib",
+        "amount": 50000,
+        "date": "2026-05-01",
+        "status": "Berhasil",
+        "category": "simpanan",
+        "memberName": "Siti Aminah",
+        "memberCode": "KSP-10555",
+        "savingsProductId": "JS-002"
+      },
+      {
+        "id": "trx-5",
+        "type": "Setoran Sukarela",
+        "amount": 500000,
+        "date": "2026-04-15",
+        "status": "Berhasil",
+        "category": "simpanan",
+        "memberName": "Siti Aminah",
+        "memberCode": "KSP-10555",
+        "savingsProductId": "JS-003"
+      },
+      {
+        "id": "trx-6",
+        "type": "Angsuran Pinjaman",
+        "amount": 1500000,
+        "date": "2026-03-10",
+        "status": "Berhasil",
+        "category": "pinjaman",
+        "memberName": "Joko Anwar",
+        "memberCode": "KSP-10002",
+        "loanId": "loan-3"
+      }
+    ],
+    "announcements": [
+      {
+        "id": "ann-1",
+        "title": "Rapat Anggota Tahunan",
+        "content": "Rapat Anggota Tahunan akan diadakan pada 20 Mei 2026 di Aula Utama.",
+        "date": "2026-05-01",
+        "isActive": true
+      },
+      {
+        "id": "ann-2",
+        "title": "Perubahan Jam Operasional",
+        "content": "Loket pelayanan buka pukul 08.00 sampai 15.00 selama bulan ini.",
+        "date": "2026-04-15",
+        "isActive": false
+      }
+    ],
+    "notifications": [
+      {
+        "id": "notif-1",
+        "userId": "member-1",
+        "title": "Pembayaran Berhasil",
+        "message": "Angsuran pinjaman bulan April telah diterima.",
+        "date": "2026-04-12",
+        "read": true
+      },
+      {
+        "id": "notif-2",
+        "userId": "member-1",
+        "title": "Rapat Anggota Tahunan",
+        "message": "Rapat Anggota Tahunan akan diadakan pada 20 Mei 2026 di Aula Utama.",
+        "date": "2026-05-01",
+        "read": false
+      },
+      {
+        "id": "notif-3",
+        "userId": "member-2",
+        "title": "Pengajuan Diproses",
+        "message": "Pengajuan pinjaman Anda sedang ditinjau oleh admin koperasi.",
+        "date": "2026-05-02",
+        "read": false
+      },
+      {
+        "id": "notif-4",
+        "userId": "member-3",
+        "title": "Pinjaman Disetujui",
+        "message": "Pengajuan pinjaman Anda sebesar Rp10000000 telah disetujui.",
+        "date": "2026-04-01",
+        "read": false
+      },
+      {
+        "id": "notif-5",
+        "userId": "member-5",
+        "title": "Pengingat Pembayaran",
+        "message": "Terdapat keterlambatan pembayaran pinjaman. Mohon lakukan pembayaran segera.",
+        "date": "2026-04-10",
+        "read": false
+      }
+    ],
+    "counters": {
+      "member": 20000,
+      "app": 10,
+      "loan": 10,
+      "trx": 10,
+      "notif": 10,
+      "ann": 10,
+      "savings": 10,
+      "loanProduct": 10
+    }
+  }
+}

@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { WaveBackground } from '@/components/ui/WaveBackground';
-import { Phone, Lock } from 'lucide-react';
+import { Phone, Lock, ShieldCheck, UserRound } from 'lucide-react';
 import { getUserFacingError, useData } from '@/context/DataContext';
+import { demoAccounts } from '@/data/mockData';
 
 interface LoginScreenProps {
   onLogin: (role: string) => void;
@@ -25,6 +26,18 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     try {
       setError('');
       const role = await login(phone, password);
+      onLogin(role);
+    } catch (error) {
+      setError(getUserFacingError(error));
+    }
+  };
+
+  const handleDemoLogin = async (account: (typeof demoAccounts)[number]) => {
+    try {
+      setError('');
+      setPhone(account.phone);
+      setPassword(account.password);
+      const role = await login(account.phone, account.password);
       onLogin(role);
     } catch (error) {
       setError(getUserFacingError(error));
@@ -86,7 +99,36 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         </div>
       </form>
 
-
+      <div className="relative z-10 mt-6 space-y-3 rounded-2xl border border-emerald-100 bg-white/80 p-4 shadow-sm backdrop-blur">
+        <div>
+          <p className="text-sm font-semibold text-gray-900">Akun demo</p>
+          <p className="text-xs text-gray-500">Data tersimpan di browser dan bisa dicoba tanpa backend.</p>
+        </div>
+        <div className="grid grid-cols-1 gap-2">
+          {demoAccounts.map((account) => {
+            const Icon = account.role === 'admin' ? ShieldCheck : UserRound;
+            return (
+              <button
+                key={account.id}
+                type="button"
+                onClick={() => handleDemoLogin(account)}
+                className="flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white px-3 py-3 text-left transition hover:border-emerald-500 hover:text-emerald-700"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+                    <Icon size={18} />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-medium text-gray-900">{account.label}</span>
+                    <span className="block text-xs text-gray-500">{account.phone} / {account.password}</span>
+                  </span>
+                </span>
+                <span className="text-xs font-semibold text-emerald-700">Masuk</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };
