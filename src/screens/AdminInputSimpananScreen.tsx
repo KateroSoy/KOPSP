@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { useUiFeedback } from '@/components/ui/FeedbackProvider';
 import { formatRupiah } from '@/lib/utils';
 import { useData } from '@/context/DataContext';
-import { Search, CheckCircle2, Wallet } from 'lucide-react';
+import { Search, CheckCircle2, Wallet, Camera, X, Image as ImageIcon } from 'lucide-react';
 
 interface AdminInputSimpananScreenProps {
   onBack: () => void;
@@ -24,6 +24,7 @@ export const AdminInputSimpananScreen: React.FC<AdminInputSimpananScreenProps> =
   const [selectedProductId, setSelectedProductId] = useState('');
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
+  const [proof, setProof] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const resetForm = () => {
@@ -32,6 +33,7 @@ export const AdminInputSimpananScreen: React.FC<AdminInputSimpananScreenProps> =
     setSelectedProductId('');
     setAmount('');
     setNote('');
+    setProof(null);
     setSearchQuery('');
   };
 
@@ -70,6 +72,17 @@ export const AdminInputSimpananScreen: React.FC<AdminInputSimpananScreenProps> =
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProof(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedMember) {
@@ -97,6 +110,7 @@ export const AdminInputSimpananScreen: React.FC<AdminInputSimpananScreenProps> =
         savingsProductId: selectedProductId,
         amount: numericAmount,
         note: note || null,
+        proof: proof || undefined,
       });
       setIsSuccess(true);
       notifySuccess('Simpanan berhasil dicatat', `Setoran ${selectedMember.name} sudah masuk ke sistem.`);
@@ -219,6 +233,41 @@ export const AdminInputSimpananScreen: React.FC<AdminInputSimpananScreenProps> =
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               />
+
+              <div className="space-y-1.5">
+                <label className="block text-sm font-medium text-gray-700">Bukti Transaksi (Opsional)</label>
+                {!proof ? (
+                  <div 
+                    onClick={() => document.getElementById('proof-upload')?.click()}
+                    className="w-full h-32 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
+                  >
+                    <Camera size={32} className="text-gray-400 mb-2" />
+                    <span className="text-sm text-gray-500">Ambil Foto atau Pilih Gambar</span>
+                    <input 
+                      id="proof-upload" 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      onChange={handleFileChange} 
+                    />
+                  </div>
+                ) : (
+                  <div className="relative rounded-xl overflow-hidden border border-gray-200">
+                    <img src={proof} alt="Bukti" className="w-full h-48 object-cover" />
+                    <button 
+                      type="button"
+                      onClick={() => setProof(null)}
+                      className="absolute top-2 right-2 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+                    >
+                      <X size={18} />
+                    </button>
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white px-3 py-1.5 text-xs flex items-center">
+                      <ImageIcon size={14} className="mr-1.5" />
+                      Bukti terpilih
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             <Button type="submit" fullWidth size="lg">

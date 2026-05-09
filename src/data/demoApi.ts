@@ -1067,7 +1067,7 @@ export const demoApi = {
     }),
   recordSavingsDeposit: (
     token: string,
-    input: { memberId: string; savingsProductId: string; amount: number; note?: string | null },
+    input: { memberId: string; savingsProductId: string; amount: number; note?: string | null; proof?: string },
   ) =>
     withStore((store) => {
       getAdminOrThrow(store, token);
@@ -1091,6 +1091,7 @@ export const demoApi = {
         memberName: member.name,
         memberCode: member.memberId,
         savingsProductId: product.id,
+        proofUrl: input.proof || null,
       };
       store.transactions.unshift(transaction);
       pushNotification(store, member.id, "Simpanan Bertambah", `Setoran ${product.name} sebesar Rp${input.amount} telah dicatat.`);
@@ -1098,7 +1099,7 @@ export const demoApi = {
       const { memberCode: _memberCode, savingsProductId: _savingsProductId, ...publicTransaction } = transaction;
       return publicTransaction;
     }),
-  recordLoanPayment: (token: string, id: string, input: { amount: number; method: "Transfer" | "Tunai"; note?: string | null }) =>
+  recordLoanPayment: (token: string, id: string, input: { amount: number; method: "Transfer" | "Tunai"; note?: string | null; proof?: string }) =>
     withStore((store) => {
       getAdminOrThrow(store, token);
       const loan = store.loans.find((item) => item.id === id);
@@ -1118,6 +1119,7 @@ export const demoApi = {
         memberName: loan.name,
         memberCode: loan.memberId,
         loanId: loan.id,
+        proofUrl: input.proof || null,
       };
       store.transactions.unshift(transaction);
       pushNotification(store, loan.userId, "Pembayaran Berhasil", `Pembayaran angsuran sebesar Rp${input.amount} telah dicatat.`);

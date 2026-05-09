@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/Input';
 import { useUiFeedback } from '@/components/ui/FeedbackProvider';
 import { formatRupiah, formatDate } from '@/lib/utils';
 import { getUserFacingError, useData } from '@/context/DataContext';
-import { CreditCard, Plus, Wallet } from 'lucide-react';
+import { CreditCard, Plus, Wallet, Camera, X, Image as ImageIcon, Eye } from 'lucide-react';
 
 export const AdminTransaksiScreen: React.FC = () => {
   const { currentData: mockData, addSavingsDeposit } = useData();
@@ -19,6 +19,8 @@ export const AdminTransaksiScreen: React.FC = () => {
   const [savingsProductId, setSavingsProductId] = useState('');
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
+  const [proof, setProof] = useState<string | null>(null);
+  const [viewProofUrl, setViewProofUrl] = useState<string | null>(null);
   const activeMembers = (members || []).filter((member: any) => member.status === 'Aktif');
   const savingsProducts = masterData?.jenisSimpanan || [];
 
@@ -36,6 +38,18 @@ export const AdminTransaksiScreen: React.FC = () => {
     setSavingsProductId('');
     setAmount('');
     setNote('');
+    setProof(null);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProof(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmitSavings = async (event: React.FormEvent) => {
@@ -56,7 +70,7 @@ export const AdminTransaksiScreen: React.FC = () => {
     }
 
     try {
-      await addSavingsDeposit({ memberId, savingsProductId, amount: numericAmount, note: note || null });
+      await addSavingsDeposit({ memberId, savingsProductId, amount: numericAmount, note: note || null, proof: proof || undefined });
       const member = activeMembers.find((item: any) => item.id === memberId);
       notifySuccess('Simpanan berhasil ditambahkan', `Setoran ${member?.name || 'anggota'} sudah tercatat.`);
       resetForm();
@@ -134,6 +148,37 @@ export const AdminTransaksiScreen: React.FC = () => {
                   onChange={(event) => setNote(event.target.value)}
                 />
 
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-medium text-gray-700">Bukti (Opsional)</label>
+                  {!proof ? (
+                    <div 
+                      onClick={() => document.getElementById('proof-upload-trx')?.click()}
+                      className="w-full h-24 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
+                    >
+                      <Camera size={24} className="text-gray-400 mb-1" />
+                      <span className="text-xs text-gray-500">Pilih Gambar</span>
+                      <input 
+                        id="proof-upload-trx" 
+                        type="file" 
+                        accept="image/*" 
+                        className="hidden" 
+                        onChange={handleFileChange} 
+                      />
+                    </div>
+                  ) : (
+                    <div className="relative rounded-xl overflow-hidden border border-gray-200">
+                      <img src={proof} alt="Bukti" className="w-full h-32 object-cover" />
+                      <button 
+                        type="button"
+                        onClick={() => setProof(null)}
+                        className="absolute top-1 right-1 w-6 h-6 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <div className="grid grid-cols-2 gap-3">
                   <Button type="button" variant="outline" onClick={() => { resetForm(); setFormOpen(false); }}>
                     Batal
@@ -175,7 +220,17 @@ export const AdminTransaksiScreen: React.FC = () => {
                       {trx.category === 'simpanan' ? <Wallet size={20} /> : <CreditCard size={20} />}
                     </div>
                     <div>
-                      <p className="font-medium text-sm text-gray-900">{trx.type}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-sm text-gray-900">{trx.type}</p>
+                        {trx.proofUrl && (
+                          <button 
+                            onClick={() => setViewProofUrl(trx.proofUrl)}
+                            className="w-6 h-6 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center hover:bg-emerald-100"
+                          >
+                            <ImageIcon size={14} />
+                          </button>
+                        )}
+                      </div>
                       <p className="text-xs text-gray-500">{trx.memberName} • {formatDate(trx.date)}</p>
                     </div>
                   </div>
@@ -194,6 +249,29 @@ export const AdminTransaksiScreen: React.FC = () => {
             )}
           </div>
         </Card>
+
+        {/* Proof Modal */}
+        {viewProofUrl && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-in fade-in duration-200">
+            <div className="relative max-w-sm w-full bg-white rounded-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+              <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-white">
+                <h3 className="font-bold text-gray-900">Bukti Transaksi</h3>
+                <button 
+                  onClick={() => setViewProofUrl(null)}
+                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X size={20} className="text-gray-500" />
+                </button>
+              </div>
+              <div className="p-4 bg-gray-50 max-h-[70vh] overflow-y-auto">
+                <img src={viewProofUrl} alt="Bukti Transaksi" className="w-full h-auto rounded-lg shadow-sm" />
+              </div>
+              <div className="p-4 border-t border-gray-100 bg-white">
+                <Button fullWidth onClick={() => setViewProofUrl(null)}>Tutup</Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

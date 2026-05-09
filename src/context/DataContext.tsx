@@ -42,8 +42,8 @@ type DataContextType = {
   addAnnouncement: (announcement: { title: string; content: string; isActive: boolean }) => Promise<void>;
   editAnnouncement: (announcement: { id: string; title: string; content: string; isActive: boolean }) => Promise<void>;
   deleteAnnouncement: (id: string) => Promise<void>;
-  addSavingsDeposit: (input: { memberId: string; savingsProductId: string; amount: number; note?: string | null }) => Promise<void>;
-  addPayment: (loanId: string, amount: number, method: "Transfer" | "Tunai", note?: string | null) => Promise<void>;
+  addSavingsDeposit: (input: { memberId: string; savingsProductId: string; amount: number; note?: string | null; proof?: string }) => Promise<void>;
+  addPayment: (loanId: string, amount: number, method: "Transfer" | "Tunai", note?: string | null, proof?: string) => Promise<void>;
   markNotificationRead: (notifId: string) => Promise<void>;
   addMember: (member: { name: string; phone: string; password: string; status: "Aktif" | "Nonaktif" }) => Promise<void>;
   updateMember: (member: { id: string; name: string; phone: string; status: "Aktif" | "Nonaktif" }) => Promise<void>;
@@ -219,9 +219,9 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     async addSavingsDeposit(input) {
       await withRefresh((activeSession) => api.recordSavingsDeposit(activeSession.token, input));
     },
-    async addPayment(loanId, amount, method, note) {
+    async addPayment(loanId, amount, method, note, proof) {
       await withRefresh((activeSession) =>
-        api.recordLoanPayment(activeSession.token, loanId, { amount, method, note }),
+        api.recordLoanPayment(activeSession.token, loanId, { amount, method, note, proof }),
       );
     },
     async markNotificationRead(notifId) {

@@ -773,7 +773,7 @@ const remoteApi = {
     ),
   recordSavingsDeposit: (
     token: string,
-    input: { memberId: string; savingsProductId: string; amount: number; note?: string | null },
+    input: { memberId: string; savingsProductId: string; amount: number; note?: string | null; proof?: string },
   ) =>
     request<TransactionItem>(
       "/api/admin/savings-deposits",
@@ -786,7 +786,7 @@ const remoteApi = {
   recordLoanPayment: (
     token: string,
     id: string,
-    input: { amount: number; method: "Transfer" | "Tunai"; note?: string | null },
+    input: { amount: number; method: "Transfer" | "Tunai"; note?: string | null; proof?: string },
   ) =>
     request<TransactionItem>(
       `/api/admin/loans/${id}/payments`,
@@ -807,7 +807,5 @@ const remoteApi = {
       token,
     ),
 };
-
-export const api = isDemoMode ? demoApi : remoteApi;
 
 

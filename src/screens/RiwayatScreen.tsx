@@ -4,12 +4,14 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah, formatDate } from '@/lib/utils';
 import { useData } from '@/context/DataContext';
-import { Wallet, CreditCard } from 'lucide-react';
+import { Wallet, CreditCard, Image as ImageIcon, X } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 export const RiwayatScreen: React.FC = () => {
   const { currentData: mockData } = useData();
   const { recentTransactions } = mockData;
   const [filter, setFilter] = useState<'semua' | 'simpanan' | 'pinjaman'>('semua');
+  const [viewProofUrl, setViewProofUrl] = useState<string | null>(null);
 
   const filteredTransactions = recentTransactions.filter(trx => 
     filter === 'semua' ? true : trx.category === filter
@@ -48,7 +50,17 @@ export const RiwayatScreen: React.FC = () => {
                       {trx.category === 'simpanan' ? <Wallet size={20} /> : <CreditCard size={20} />}
                     </div>
                     <div>
-                      <p className="font-medium text-sm text-gray-900">{trx.type}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-sm text-gray-900">{trx.type}</p>
+                        {trx.proofUrl && (
+                          <button 
+                            onClick={() => setViewProofUrl(trx.proofUrl)}
+                            className="w-6 h-6 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center hover:bg-emerald-100"
+                          >
+                            <ImageIcon size={14} />
+                          </button>
+                        )}
+                      </div>
                       <p className="text-xs text-gray-500">{formatDate(trx.date)}</p>
                     </div>
                   </div>
@@ -67,6 +79,29 @@ export const RiwayatScreen: React.FC = () => {
             )}
           </div>
         </Card>
+
+        {/* Proof Modal */}
+        {viewProofUrl && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-in fade-in duration-200">
+            <div className="relative max-w-sm w-full bg-white rounded-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+              <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-white">
+                <h3 className="font-bold text-gray-900">Bukti Transaksi</h3>
+                <button 
+                  onClick={() => setViewProofUrl(null)}
+                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X size={20} className="text-gray-500" />
+                </button>
+              </div>
+              <div className="p-4 bg-gray-50 max-h-[70vh] overflow-y-auto text-center">
+                <img src={viewProofUrl} alt="Bukti Transaksi" className="w-full h-auto rounded-lg shadow-sm mx-auto" />
+              </div>
+              <div className="p-4 border-t border-gray-100 bg-white">
+                <Button fullWidth onClick={() => setViewProofUrl(null)}>Tutup</Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
