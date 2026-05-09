@@ -4,14 +4,15 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/utils';
 import { useData } from '@/context/DataContext';
-import { Wallet, TrendingUp, PiggyBank, Users, ArrowUpRight, History, Plus } from 'lucide-react';
+import { Wallet, TrendingUp, PiggyBank, Users, ArrowUpRight, History, Plus, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 interface AdminSimpananScreenProps {
   onAddSimpanan: () => void;
+  onCetakMutasi: () => void;
 }
 
-export const AdminSimpananScreen: React.FC<AdminSimpananScreenProps> = ({ onAddSimpanan }) => {
+export const AdminSimpananScreen: React.FC<AdminSimpananScreenProps> = ({ onAddSimpanan, onCetakMutasi }) => {
   const { currentData: mockData } = useData();
   
   if (!mockData || !('members' in mockData)) {
@@ -33,13 +34,23 @@ export const AdminSimpananScreen: React.FC<AdminSimpananScreenProps> = ({ onAddS
       <TopBar title="Manajemen Simpanan" />
 
       <div className="p-4 max-w-md mx-auto space-y-6">
-        <Button 
-          fullWidth 
-          className="flex items-center justify-center" 
-          onClick={onAddSimpanan}
-        >
-          <Plus size={20} className="mr-2" /> Tambah Simpanan
-        </Button>
+        <div className="grid grid-cols-2 gap-3">
+          <Button 
+            fullWidth 
+            className="flex items-center justify-center" 
+            onClick={onAddSimpanan}
+          >
+            <Plus size={20} className="mr-2" /> Tambah
+          </Button>
+          <Button 
+            fullWidth 
+            variant="outline"
+            className="flex items-center justify-center border-emerald-200 text-emerald-700 bg-emerald-50/50 hover:bg-emerald-50" 
+            onClick={onCetakMutasi}
+          >
+            <Printer size={20} className="mr-2" /> Mutasi
+          </Button>
+        </div>
 
         {/* Total Summary Card */}
         <Card className="bg-emerald-600 border-none text-white overflow-hidden relative">

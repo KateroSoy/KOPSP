@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah, formatDate } from '@/lib/utils';
 import { useData } from '@/context/DataContext';
-import { Wallet, CreditCard, Image as ImageIcon, X } from 'lucide-react';
+import { Wallet, CreditCard, Image as ImageIcon, X, Printer, PiggyBank } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export const RiwayatScreen: React.FC = () => {
@@ -12,6 +12,7 @@ export const RiwayatScreen: React.FC = () => {
   const { recentTransactions } = mockData;
   const [filter, setFilter] = useState<'semua' | 'simpanan' | 'pinjaman'>('semua');
   const [viewProofUrl, setViewProofUrl] = useState<string | null>(null);
+  const [viewReceiptTrx, setViewReceiptTrx] = useState<any | null>(null);
 
   const filteredTransactions = recentTransactions.filter(trx => 
     filter === 'semua' ? true : trx.category === filter
@@ -56,10 +57,18 @@ export const RiwayatScreen: React.FC = () => {
                           <button 
                             onClick={() => setViewProofUrl(trx.proofUrl)}
                             className="w-6 h-6 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center hover:bg-emerald-100"
+                            title="Lihat Bukti Foto"
                           >
                             <ImageIcon size={14} />
                           </button>
                         )}
+                        <button 
+                          onClick={() => setViewReceiptTrx(trx)}
+                          className="w-6 h-6 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center hover:bg-blue-100"
+                          title="Cetak Struk"
+                        >
+                          <Printer size={14} />
+                        </button>
                       </div>
                       <p className="text-xs text-gray-500">{formatDate(trx.date)}</p>
                     </div>
@@ -100,6 +109,118 @@ export const RiwayatScreen: React.FC = () => {
                 <Button fullWidth onClick={() => setViewProofUrl(null)}>Tutup</Button>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Receipt Modal */}
+        {viewReceiptTrx && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 print:p-0 print:bg-white">
+            <div className="relative max-w-sm w-full bg-white rounded-2xl overflow-hidden shadow-2xl print:shadow-none print:rounded-none animate-in zoom-in-95 duration-200">
+              {/* Receipt Header (Modal Only) */}
+              <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-white print:hidden">
+                <h3 className="font-bold text-gray-900">Struk Transaksi</h3>
+                <button 
+                  onClick={() => setViewReceiptTrx(null)}
+                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X size={20} className="text-gray-500" />
+                </button>
+              </div>
+
+              {/* Receipt Content */}
+              <div id="receipt-print-area-member" className="p-8 bg-white text-gray-900 font-mono text-sm leading-relaxed">
+                {/* Logo & Header */}
+                <div className="text-center mb-6 space-y-1">
+                  <div className="flex justify-center mb-2">
+                    <div className="w-12 h-12 bg-emerald-600 text-white rounded-xl flex items-center justify-center">
+                      <PiggyBank size={28} />
+                    </div>
+                  </div>
+                  <h2 className="text-xl font-bold uppercase tracking-tight">Koperasi Simpan Pinjam</h2>
+                  <p className="text-[10px] text-gray-500 italic">Jalan Raya Karawang No. 123, Jawa Barat</p>
+                  <div className="border-b-2 border-dashed border-gray-300 pt-2"></div>
+                </div>
+
+                {/* Details */}
+                <div className="space-y-3 mb-8">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500 uppercase text-[10px]">No. Transaksi</span>
+                    <span className="font-bold">{viewReceiptTrx.id.toUpperCase()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500 uppercase text-[10px]">Tanggal</span>
+                    <span>{formatDate(viewReceiptTrx.date)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500 uppercase text-[10px]">Anggota</span>
+                    <span className="font-bold">{viewReceiptTrx.memberName || (mockData as any).user?.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500 uppercase text-[10px]">Jenis</span>
+                    <span className="bg-gray-100 px-2 py-0.5 rounded font-bold">{viewReceiptTrx.type}</span>
+                  </div>
+                  
+                  <div className="border-b border-dashed border-gray-200 py-1"></div>
+                  
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-gray-500 uppercase text-xs">Nominal</span>
+                    <span className="text-lg font-black text-emerald-700">{formatRupiah(viewReceiptTrx.amount)}</span>
+                  </div>
+
+                  {viewReceiptTrx.note && (
+                    <div className="bg-gray-50 p-2 rounded text-[10px] italic">
+                      <span className="text-gray-400 block uppercase not-italic font-bold mb-0.5">Catatan:</span>
+                      {viewReceiptTrx.note}
+                    </div>
+                  )}
+                </div>
+
+                {/* Signatures */}
+                <div className="grid grid-cols-2 gap-8 text-center pt-4 border-t-2 border-dashed border-gray-300">
+                  <div className="space-y-10">
+                    <span className="text-[10px] text-gray-500 uppercase">Anggota</span>
+                    <div className="text-xs font-bold border-t border-gray-300 pt-1">{viewReceiptTrx.memberName || (mockData as any).user?.name}</div>
+                  </div>
+                  <div className="space-y-10">
+                    <span className="text-[10px] text-gray-500 uppercase">Petugas</span>
+                    <div className="text-xs font-bold border-t border-gray-300 pt-1">Sistem Koperasi</div>
+                  </div>
+                </div>
+
+                <div className="text-center mt-10 space-y-1">
+                  <p className="text-[10px] font-bold">Terima kasih atas kepercayaannya.</p>
+                  <p className="text-[8px] text-gray-400 italic">Dicetak secara otomatis oleh sistem.</p>
+                </div>
+              </div>
+
+              {/* Actions (Modal Only) */}
+              <div className="p-4 border-t border-gray-100 bg-gray-50 flex gap-3 print:hidden">
+                <Button variant="outline" className="flex-1" onClick={() => setViewReceiptTrx(null)}>Tutup</Button>
+                <Button className="flex-1 gap-2" onClick={() => window.print()}>
+                  <Printer size={18} /> Cetak Struk
+                </Button>
+              </div>
+            </div>
+
+            {/* Print CSS */}
+            <style dangerouslySetInnerHTML={{ __html: `
+              @media print {
+                body * {
+                  visibility: hidden;
+                }
+                #receipt-print-area-member, #receipt-print-area-member * {
+                  visibility: visible;
+                }
+                #receipt-print-area-member {
+                  position: absolute;
+                  left: 0;
+                  top: 0;
+                  width: 100%;
+                  padding: 0;
+                  margin: 0;
+                }
+              }
+            ` }} />
           </div>
         )}
       </div>

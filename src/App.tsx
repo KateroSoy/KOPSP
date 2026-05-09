@@ -24,6 +24,7 @@ import { AdminDetailAnggotaScreen } from './screens/AdminDetailAnggotaScreen';
 import { AdminMasterDataScreen } from './screens/AdminMasterDataScreen';
 import { AdminReportsScreen } from './screens/AdminReportsScreen';
 import { AdminSimpananScreen } from './screens/AdminSimpananScreen';
+import { AdminCetakMutasiScreen } from './screens/AdminCetakMutasiScreen';
 import { AdminInputSimpananScreen } from './screens/AdminInputSimpananScreen';
 
 import { BottomNav } from './components/layout/BottomNav';
@@ -47,6 +48,7 @@ type Screen =
   | 'admin_pengajuan'
   | 'admin_input_pembayaran'
   | 'admin_transaksi'
+  | 'admin_cetak_mutasi'
   | 'admin_pengumuman'
   | 'admin_pinjaman_aktif'
   | 'admin_pengaturan'
@@ -191,9 +193,16 @@ function AppContent() {
       case 'admin_laporan':
         return <AdminReportsScreen />;
       case 'admin_simpanan':
-        return <AdminSimpananScreen onAddSimpanan={() => setCurrentScreen('admin_input_simpanan')} />;
+        return (
+          <AdminSimpananScreen 
+            onAddSimpanan={() => setCurrentScreen('admin_input_simpanan')} 
+            onCetakMutasi={() => setCurrentScreen('admin_cetak_mutasi')}
+          />
+        );
       case 'admin_input_simpanan':
         return <AdminInputSimpananScreen onBack={() => { setCurrentScreen('admin_simpanan'); setActiveTab('admin_simpanan'); }} />;
+      case 'admin_cetak_mutasi':
+        return <AdminCetakMutasiScreen onBack={() => setCurrentScreen('admin_simpanan')} />;
         
       default:
         return <LoginScreen onLogin={() => {}} />;
@@ -201,7 +210,7 @@ function AppContent() {
   };
 
   const showMemberNav = userRole === 'member' && ['dashboard', 'simpanan', 'pinjaman', 'akun', 'riwayat', 'notifikasi'].includes(currentScreen);
-  const showAdminNav = userRole === 'admin' && ['admin_dashboard', 'admin_anggota', 'admin_detail_anggota', 'admin_master_data', 'admin_pengajuan', 'admin_menu', 'admin_input_pembayaran', 'admin_transaksi', 'admin_pengumuman', 'admin_pinjaman_aktif', 'admin_pengaturan', 'admin_simpanan', 'admin_input_simpanan', 'admin_laporan'].includes(currentScreen);
+  const showAdminNav = userRole === 'admin' && ['admin_dashboard', 'admin_anggota', 'admin_detail_anggota', 'admin_master_data', 'admin_pengajuan', 'admin_menu', 'admin_input_pembayaran', 'admin_transaksi', 'admin_pengumuman', 'admin_pinjaman_aktif', 'admin_pengaturan', 'admin_simpanan', 'admin_input_simpanan', 'admin_laporan', 'admin_cetak_mutasi'].includes(currentScreen);
 
   return (
     <div className="font-sans text-gray-900 antialiased selection:bg-emerald-100 selection:text-emerald-900">
