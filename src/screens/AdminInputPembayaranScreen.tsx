@@ -32,10 +32,12 @@ export const AdminInputPembayaranScreen: React.FC<AdminInputPembayaranScreenProp
     setSearchQuery('');
   };
 
-  const filteredLoans = activeLoans.filter((loan: any) =>
-    loan.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    loan.memberId.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const filteredLoans = [...activeLoans]
+    .filter((loan: any) =>
+      loan.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      loan.memberId.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
+    .sort((a, b) => (b.dateDisbursed || '').localeCompare(a.dateDisbursed || ''));
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, '');
@@ -117,7 +119,7 @@ export const AdminInputPembayaranScreen: React.FC<AdminInputPembayaranScreenProp
             />
 
             <div className="space-y-3">
-              {searchQuery && filteredLoans.map((loan: any) => (
+              {filteredLoans.map((loan: any) => (
                 <Card
                   key={loan.id}
                   className="cursor-pointer hover:border-emerald-500 transition-colors"
@@ -137,11 +139,8 @@ export const AdminInputPembayaranScreen: React.FC<AdminInputPembayaranScreenProp
                   </CardContent>
                 </Card>
               ))}
-              {searchQuery && filteredLoans.length === 0 && (
-                <p className="text-center text-gray-500 py-8">Tidak ditemukan pinjaman aktif untuk pencarian ini.</p>
-              )}
-              {!searchQuery && (
-                <p className="text-center text-gray-500 py-8 text-sm">Ketik nama anggota untuk mencari pinjaman aktif.</p>
+              {filteredLoans.length === 0 && (
+                <p className="text-center text-gray-500 py-8">Tidak ditemukan pinjaman aktif.</p>
               )}
             </div>
           </div>

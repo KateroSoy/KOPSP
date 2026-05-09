@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Users, FileText, Menu } from 'lucide-react';
+import { LayoutDashboard, Users, FileText, Menu, Wallet } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AdminBottomNavProps {
@@ -11,6 +11,7 @@ export const AdminBottomNav: React.FC<AdminBottomNavProps> = ({ activeTab, onCha
   const tabs = [
     { id: 'admin_dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'admin_anggota', label: 'Anggota', icon: Users },
+    { id: 'admin_simpanan', label: 'Simpanan', icon: Wallet },
     { id: 'admin_pengajuan', label: 'Pengajuan', icon: FileText },
     { id: 'admin_menu', label: 'Lainnya', icon: Menu },
   ];

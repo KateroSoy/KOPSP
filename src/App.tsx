@@ -23,6 +23,8 @@ import { AdminPengaturanScreen } from './screens/AdminPengaturanScreen';
 import { AdminDetailAnggotaScreen } from './screens/AdminDetailAnggotaScreen';
 import { AdminMasterDataScreen } from './screens/AdminMasterDataScreen';
 import { AdminReportsScreen } from './screens/AdminReportsScreen';
+import { AdminSimpananScreen } from './screens/AdminSimpananScreen';
+import { AdminInputSimpananScreen } from './screens/AdminInputSimpananScreen';
 
 import { BottomNav } from './components/layout/BottomNav';
 import { AdminBottomNav } from './components/layout/AdminBottomNav';
@@ -49,6 +51,8 @@ type Screen =
   | 'admin_pinjaman_aktif'
   | 'admin_pengaturan'
   | 'admin_menu'
+  | 'admin_simpanan'
+  | 'admin_input_simpanan'
   | 'admin_laporan';
 
 function AppContent() {
@@ -120,6 +124,8 @@ function AppContent() {
     else if (tab === 'admin_pinjaman_aktif') setCurrentScreen('admin_pinjaman_aktif');
     else if (tab === 'admin_pengaturan') setCurrentScreen('admin_pengaturan');
     else if (tab === 'admin_master_data') setCurrentScreen('admin_master_data');
+    else if (tab === 'admin_simpanan') setCurrentScreen('admin_simpanan');
+    else if (tab === 'admin_input_simpanan') setCurrentScreen('admin_input_simpanan');
     else if (tab === 'admin_laporan') setCurrentScreen('admin_laporan');
   };
 
@@ -184,6 +190,10 @@ function AppContent() {
         return <AdminPengaturanScreen />;
       case 'admin_laporan':
         return <AdminReportsScreen />;
+      case 'admin_simpanan':
+        return <AdminSimpananScreen onAddSimpanan={() => setCurrentScreen('admin_input_simpanan')} />;
+      case 'admin_input_simpanan':
+        return <AdminInputSimpananScreen onBack={() => { setCurrentScreen('admin_simpanan'); setActiveTab('admin_simpanan'); }} />;
         
       default:
         return <LoginScreen onLogin={() => {}} />;
@@ -191,7 +201,7 @@ function AppContent() {
   };
 
   const showMemberNav = userRole === 'member' && ['dashboard', 'simpanan', 'pinjaman', 'akun', 'riwayat', 'notifikasi'].includes(currentScreen);
-  const showAdminNav = userRole === 'admin' && ['admin_dashboard', 'admin_anggota', 'admin_detail_anggota', 'admin_master_data', 'admin_pengajuan', 'admin_menu', 'admin_input_pembayaran', 'admin_transaksi', 'admin_pengumuman', 'admin_pinjaman_aktif', 'admin_pengaturan', 'admin_laporan'].includes(currentScreen);
+  const showAdminNav = userRole === 'admin' && ['admin_dashboard', 'admin_anggota', 'admin_detail_anggota', 'admin_master_data', 'admin_pengajuan', 'admin_menu', 'admin_input_pembayaran', 'admin_transaksi', 'admin_pengumuman', 'admin_pinjaman_aktif', 'admin_pengaturan', 'admin_simpanan', 'admin_input_simpanan', 'admin_laporan'].includes(currentScreen);
 
   return (
     <div className="font-sans text-gray-900 antialiased selection:bg-emerald-100 selection:text-emerald-900">
