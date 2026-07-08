@@ -29,7 +29,10 @@ import { AdminInputSimpananScreen } from './screens/AdminInputSimpananScreen';
 
 import { BottomNav } from './components/layout/BottomNav';
 import { AdminBottomNav } from './components/layout/AdminBottomNav';
+import { Sidebar } from './components/layout/Sidebar';
+import { AdminSidebar } from './components/layout/AdminSidebar';
 import { FeedbackProvider } from './components/ui/FeedbackProvider';
+import { ProductTour } from './components/ui/ProductTour';
 
 type Screen = 
   | 'login' 
@@ -63,6 +66,7 @@ function AppContent() {
   const [activeTab, setActiveTab] = useState('beranda');
   const [userRole, setUserRole] = useState<string>('member');
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  const [showTour, setShowTour] = useState<boolean>(false);
 
   React.useEffect(() => {
     if (!authReady) {
@@ -89,6 +93,20 @@ function AppContent() {
       setActiveTab('beranda');
     }
   }, [authReady, isAuthenticated, role, currentScreen]);
+
+  React.useEffect(() => {
+    if (currentScreen === 'dashboard' || currentScreen === 'admin_dashboard') {
+      const tourCompleted = localStorage.getItem('sp_tour_completed');
+      if (!tourCompleted) {
+        setTimeout(() => setShowTour(true), 1000);
+      }
+    }
+  }, [currentScreen]);
+
+  const handleCloseTour = () => {
+    setShowTour(false);
+    localStorage.setItem('sp_tour_completed', 'true');
+  };
 
   if (!authReady) {
     return (
@@ -213,10 +231,28 @@ function AppContent() {
   const showAdminNav = userRole === 'admin' && ['admin_dashboard', 'admin_anggota', 'admin_detail_anggota', 'admin_master_data', 'admin_pengajuan', 'admin_menu', 'admin_input_pembayaran', 'admin_transaksi', 'admin_pengumuman', 'admin_pinjaman_aktif', 'admin_pengaturan', 'admin_simpanan', 'admin_input_simpanan', 'admin_laporan', 'admin_cetak_mutasi'].includes(currentScreen);
 
   return (
-    <div className="font-sans text-gray-900 antialiased selection:bg-emerald-100 selection:text-emerald-900">
-      {renderScreen()}
-      {showMemberNav && <BottomNav activeTab={activeTab} onChange={handleNavigate} />}
-      {showAdminNav && <AdminBottomNav activeTab={activeTab} onChange={handleNavigate} />}
+    <div className="font-sans text-gray-900 antialiased selection:bg-emerald-100 selection:text-emerald-900 md:flex md:h-screen md:overflow-hidden bg-gray-50">
+      {showMemberNav && <Sidebar activeTab={activeTab} onChange={handleNavigate} className="hidden md:flex" />}
+      {showAdminNav && <AdminSidebar activeTab={activeTab} onChange={handleNavigate} className="hidden md:flex" />}
+      
+      <div className="md:flex-1 md:overflow-y-auto w-full relative h-screen md:h-auto overflow-y-auto">
+        <div className="pb-16 md:pb-0 min-h-full">
+          {renderScreen()}
+        </div>
+        {showMemberNav && (
+          <div className="md:hidden">
+            <BottomNav activeTab={activeTab} onChange={handleNavigate} />
+          </div>
+        )}
+        {showAdminNav && (
+          <div className="md:hidden">
+            <AdminBottomNav activeTab={activeTab} onChange={handleNavigate} />
+          </div>
+        )}
+      </div>
+      
+      {/* Product Tour Wizard */}
+      <ProductTour isOpen={showTour} onClose={handleCloseTour} />
     </div>
   );
 }

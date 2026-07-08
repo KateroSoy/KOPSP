@@ -13,7 +13,7 @@ export const SimpananScreen: React.FC = () => {
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Simpanan Saya" />
 
-      <div className="p-4 max-w-md mx-auto space-y-6">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-6">
         <Card className="bg-emerald-600 border-none text-white overflow-hidden relative">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-10 -mt-10"></div>
           <CardContent className="p-6 relative z-10">

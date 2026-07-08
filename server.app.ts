@@ -24,6 +24,7 @@ import {
   passwordChangeSchema,
   profileUpdateSchema,
   reportRangeQuerySchema,
+  savingsDepositSchema,
   savingsReportQuerySchema,
   savingsProductSchema,
 } from "./server.schemas.js";
@@ -489,6 +490,16 @@ export const createApp = (services: AppServices = createServices()) => {
     requireRole("admin"),
     asyncHandler(async (req: AuthenticatedRequest, res) => {
       ok(res, await services.admin.listLoans(req.auth!.userId));
+    }),
+  );
+
+  app.post(
+    "/api/admin/savings-deposits",
+    requireAuth,
+    requireRole("admin"),
+    asyncHandler(async (req: AuthenticatedRequest, res) => {
+      const body = parseWithSchema(savingsDepositSchema, req.body);
+      ok(res, await services.admin.recordSavingsDeposit(req.auth!.userId, body), 201);
     }),
   );
 

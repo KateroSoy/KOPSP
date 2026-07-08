@@ -45,7 +45,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-green-50 to-green-50 flex flex-col justify-center px-6 max-w-md mx-auto py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-white via-green-50 to-green-50 flex flex-col justify-center px-6 max-w-md md:max-w-5xl mx-auto py-12 relative overflow-hidden">
       <WaveBackground className="pointer-events-none" />
       
       <div className="relative z-10 mb-10 text-center">

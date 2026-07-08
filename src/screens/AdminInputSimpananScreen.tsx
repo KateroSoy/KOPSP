@@ -121,7 +121,7 @@ export const AdminInputSimpananScreen: React.FC<AdminInputSimpananScreenProps> =
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-white flex flex-col justify-center px-6 max-w-md mx-auto text-center">
+      <div className="min-h-screen bg-white flex flex-col justify-center px-6 max-w-md md:max-w-2xl mx-auto text-center">
         <div className="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-in zoom-in duration-300">
           <CheckCircle2 size={48} />
         </div>
@@ -143,7 +143,7 @@ export const AdminInputSimpananScreen: React.FC<AdminInputSimpananScreenProps> =
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Input Simpanan" showBack onBack={onBack} />
 
-      <div className="p-4 max-w-md mx-auto space-y-6">
+      <div className="p-4 max-w-md md:max-w-2xl mx-auto space-y-6">
         {!selectedMember ? (
           <div className="space-y-4 animate-in fade-in">
             <Input

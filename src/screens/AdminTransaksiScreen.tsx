@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/Input';
 import { useUiFeedback } from '@/components/ui/FeedbackProvider';
 import { formatRupiah, formatDate } from '@/lib/utils';
 import { getUserFacingError, useData } from '@/context/DataContext';
-import { CreditCard, Plus, Wallet, Camera, X, Image as ImageIcon, Eye, Printer, FileText } from 'lucide-react';
+import { CreditCard, PiggyBank, Plus, Wallet, Camera, X, Image as ImageIcon, Eye, Printer, FileText } from 'lucide-react';
 
 export const AdminTransaksiScreen: React.FC = () => {
   const { currentData: mockData, addSavingsDeposit } = useData();
@@ -86,7 +86,7 @@ export const AdminTransaksiScreen: React.FC = () => {
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Semua Transaksi" />
 
-      <div className="p-4 max-w-md mx-auto space-y-4">
+      <div className="p-4 md:p-8 max-w-md md:max-w-7xl mx-auto space-y-4 md:space-y-6">
         <Button fullWidth onClick={() => setFormOpen((current) => !current)}>
           <Plus size={18} className="mr-2" />
           Tambah Simpanan
@@ -211,8 +211,9 @@ export const AdminTransaksiScreen: React.FC = () => {
         </div>
 
         {/* Transactions List */}
-        <Card>
-          <div className="divide-y divide-gray-100">
+        <Card className="overflow-hidden">
+          {/* Mobile View */}
+          <div className="divide-y divide-gray-100 md:hidden">
             {filteredTransactions.length > 0 ? (
               filteredTransactions.map((trx: any) => (
                 <div key={trx.id} className="p-4 flex items-center justify-between">
@@ -256,6 +257,69 @@ export const AdminTransaksiScreen: React.FC = () => {
                 Belum ada transaksi
               </div>
             )}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-500 text-sm border-b border-gray-100">
+                  <th className="p-4 font-medium">Tanggal</th>
+                  <th className="p-4 font-medium">Anggota</th>
+                  <th className="p-4 font-medium">Jenis Transaksi</th>
+                  <th className="p-4 font-medium">Kategori</th>
+                  <th className="p-4 font-medium">Nominal</th>
+                  <th className="p-4 font-medium">Status</th>
+                  <th className="p-4 font-medium text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {filteredTransactions.length > 0 ? (
+                  filteredTransactions.map((trx: any) => (
+                    <tr key={trx.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="p-4 text-sm text-gray-500">{formatDate(trx.date)}</td>
+                      <td className="p-4 font-medium text-gray-900">{trx.memberName}</td>
+                      <td className="p-4 font-medium text-gray-900">{trx.type}</td>
+                      <td className="p-4">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${trx.category === 'simpanan' ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'}`}>
+                          {trx.category.charAt(0).toUpperCase() + trx.category.slice(1)}
+                        </span>
+                      </td>
+                      <td className={`p-4 font-medium ${trx.category === 'simpanan' ? 'text-emerald-600' : 'text-gray-900'}`}>
+                        {trx.category === 'simpanan' ? '+' : '-'}{formatRupiah(trx.amount)}
+                      </td>
+                      <td className="p-4">
+                        <Badge variant="success">{trx.status}</Badge>
+                      </td>
+                      <td className="p-4 flex items-center justify-end space-x-2">
+                        {trx.proofUrl && (
+                          <button 
+                            onClick={() => setViewProofUrl(trx.proofUrl)}
+                            className="p-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors"
+                            title="Lihat Bukti Foto"
+                          >
+                            <ImageIcon size={18} />
+                          </button>
+                        )}
+                        <button 
+                          onClick={() => setViewReceiptTrx(trx)}
+                          className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                          title="Cetak Struk"
+                        >
+                          <Printer size={18} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={7} className="p-8 text-center text-gray-500">
+                      Belum ada transaksi
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </Card>
 

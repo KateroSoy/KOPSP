@@ -189,6 +189,31 @@ export const loanPaymentSchema = z.object({
     invalid_type_error: "Metode pembayaran tidak valid.",
   }),
   note: optionalTextField("Catatan pembayaran", 500),
+  proof: z
+    .string({ invalid_type_error: "Bukti pembayaran tidak valid." })
+    .optional()
+    .nullable(),
+});
+
+export const savingsDepositSchema = z.object({
+  memberId: z
+    .string({
+      required_error: "ID anggota wajib diisi.",
+      invalid_type_error: "ID anggota tidak valid.",
+    })
+    .min(1, "ID anggota wajib diisi."),
+  savingsProductId: z
+    .string({
+      required_error: "Jenis simpanan wajib dipilih.",
+      invalid_type_error: "Jenis simpanan tidak valid.",
+    })
+    .min(1, "Jenis simpanan wajib dipilih."),
+  amount: moneyField("Nominal simpanan").positive("Nominal simpanan harus lebih dari 0."),
+  note: optionalTextField("Catatan setoran", 500),
+  proof: z
+    .string({ invalid_type_error: "Bukti setoran tidak valid." })
+    .optional()
+    .nullable(),
 });
 
 export const reportRangeQuerySchema = z.object({

@@ -58,7 +58,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onLogout }) => {
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Profil Saya" />
 
-      <div className="p-4 max-w-md mx-auto space-y-6">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-6">
         <div className="flex flex-col items-center py-6">
           <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-4">
             <User size={40} />

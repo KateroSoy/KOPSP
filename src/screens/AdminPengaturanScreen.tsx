@@ -54,7 +54,7 @@ export const AdminPengaturanScreen: React.FC = () => {
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Pengaturan Admin" />
 
-      <div className="p-4 max-w-md mx-auto space-y-6">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-6">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-3 mb-4">

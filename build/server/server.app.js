@@ -4,7 +4,7 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
-import { arrearsReportQuerySchema, announcementSchema, cashflowReportQuerySchema, dailyTransactionsReportQuerySchema, idParamSchema, installmentsReportQuerySchema, loanApplicationCreateSchema, loanApplicationReviewSchema, loanPaymentSchema, loansReportQuerySchema, loanProductSchema, loginSchema, memberCreateSchema, membersReportQuerySchema, monthlyRecapReportQuerySchema, memberUpdateSchema, passwordChangeSchema, profileUpdateSchema, reportRangeQuerySchema, savingsReportQuerySchema, savingsProductSchema, } from "./server.schemas.js";
+import { arrearsReportQuerySchema, announcementSchema, cashflowReportQuerySchema, dailyTransactionsReportQuerySchema, idParamSchema, installmentsReportQuerySchema, loanApplicationCreateSchema, loanApplicationReviewSchema, loanPaymentSchema, loansReportQuerySchema, loanProductSchema, loginSchema, memberCreateSchema, membersReportQuerySchema, monthlyRecapReportQuerySchema, memberUpdateSchema, passwordChangeSchema, profileUpdateSchema, reportRangeQuerySchema, savingsDepositSchema, savingsReportQuerySchema, savingsProductSchema, } from "./server.schemas.js";
 import { env } from "./server.config.env.js";
 import { AppError, asyncHandler, ok, parseWithSchema, prismaErrorToAppError, requireAuth, requireRole, } from "./server.utils.js";
 import { createServices } from "./server.services.js";
@@ -215,6 +215,10 @@ export const createApp = (services = createServices()) => {
     }));
     app.get("/api/admin/loans", requireAuth, requireRole("admin"), asyncHandler(async (req, res) => {
         ok(res, await services.admin.listLoans(req.auth.userId));
+    }));
+    app.post("/api/admin/savings-deposits", requireAuth, requireRole("admin"), asyncHandler(async (req, res) => {
+        const body = parseWithSchema(savingsDepositSchema, req.body);
+        ok(res, await services.admin.recordSavingsDeposit(req.auth.userId, body), 201);
     }));
     app.post("/api/admin/loans/:id/payments", requireAuth, requireRole("admin"), asyncHandler(async (req, res) => {
         const params = parseWithSchema(idParamSchema, req.params);

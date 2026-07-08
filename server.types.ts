@@ -612,6 +612,16 @@ export type AppServices = {
       },
     ): Promise<MonthlyRecapReport>;
     getMemberDetailReport(userId: string, memberCode: string): Promise<MemberDetailReport>;
+    recordSavingsDeposit(
+      userId: string,
+      input: {
+        memberId: string;
+        savingsProductId: string;
+        amount: number;
+        note?: string | null;
+        proof?: string | null;
+      },
+    ): Promise<TransactionItem>;
     recordLoanPayment(
       userId: string,
       loanId: string,
@@ -619,6 +629,7 @@ export type AppServices = {
         amount: number;
         method: "Transfer" | "Tunai";
         note?: string | null;
+        proof?: string | null;
       },
     ): Promise<TransactionItem>;
   };

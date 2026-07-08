@@ -192,7 +192,7 @@ const FilterSheet: React.FC<{
   return (
     <div className="fixed inset-0 z-[80] bg-slate-950/35 px-4 pb-6 pt-10 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="mx-auto mt-auto w-full max-w-md rounded-[28px] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.28)]"
+        className="mx-auto mt-auto w-full max-w-md md:max-w-5xl rounded-[28px] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.28)]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="border-b border-gray-100 px-5 py-4">

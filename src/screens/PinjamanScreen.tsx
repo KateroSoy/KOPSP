@@ -19,7 +19,7 @@ export const PinjamanScreen: React.FC<PinjamanScreenProps> = ({ onAjukan }) => {
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Pinjaman Saya" />
 
-      <div className="p-4 max-w-md mx-auto space-y-6">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-6">
         {activeLoan ? (
           <>
             <Card className="overflow-hidden">

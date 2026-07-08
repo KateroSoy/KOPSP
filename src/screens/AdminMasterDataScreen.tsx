@@ -249,7 +249,7 @@ export const AdminMasterDataScreen: React.FC<AdminMasterDataScreenProps> = ({ on
     return (
       <div className="min-h-screen bg-gray-50 pb-24">
         <TopBar title={`Form ${editType === 'anggota' ? 'Anggota' : editType === 'simpanan' ? 'Simpanan' : 'Pinjaman'}`} showBack onBack={closeEditor} />
-        <div className="p-4 max-w-md mx-auto">
+        <div className="p-4 max-w-md md:max-w-5xl mx-auto">
           <Card>
             <CardContent className="p-4">
               {renderEditForm()}
@@ -264,7 +264,7 @@ export const AdminMasterDataScreen: React.FC<AdminMasterDataScreenProps> = ({ on
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Master Data" showBack onBack={onBack} />
 
-      <div className="p-4 max-w-md mx-auto space-y-4">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-4">
         <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
           {tabs.map((tab) => (
             <button

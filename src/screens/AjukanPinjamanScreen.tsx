@@ -56,7 +56,7 @@ export const AjukanPinjamanScreen: React.FC<AjukanPinjamanScreenProps> = ({ onBa
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Ajukan Pinjaman" showBack onBack={step === 1 ? onBack : () => setStep(step - 1)} />
 
-      <div className="p-4 max-w-md mx-auto space-y-6">
+      <div className="p-4 max-w-md md:max-w-2xl mx-auto space-y-6">
         {/* Stepper */}
         <div className="flex items-center justify-between mb-8 px-2">
           {[1, 2, 3, 4].map((i) => (

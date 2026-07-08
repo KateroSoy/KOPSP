@@ -33,7 +33,7 @@ export const AdminSimpananScreen: React.FC<AdminSimpananScreenProps> = ({ onAddS
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Manajemen Simpanan" />
 
-      <div className="p-4 max-w-md mx-auto space-y-6">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-6">
         <div className="grid grid-cols-2 gap-3">
           <Button 
             fullWidth 

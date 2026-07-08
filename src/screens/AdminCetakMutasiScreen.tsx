@@ -47,7 +47,7 @@ export const AdminCetakMutasiScreen: React.FC<AdminCetakMutasiScreenProps> = ({ 
         <TopBar title="Cetak Mutasi Tabungan" />
       </div>
 
-      <div className="p-4 max-w-md mx-auto space-y-6 print:p-0 print:max-w-none print:bg-white">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-6 print:p-0 print:max-w-none print:bg-white">
         
         {/* Member Selection (Hidden on Print) */}
         {!selectedMember ? (

@@ -73,7 +73,7 @@ export const AdminAnggotaScreen: React.FC<AdminAnggotaScreenProps> = ({ onMember
           setFormData({ name: '', phone: '', password: '', status: 'Aktif' });
         }} />
 
-        <div className="p-4 max-w-md mx-auto space-y-4">
+        <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-4">
           <Card>
             <div className="p-5 space-y-4">
               <Input 
@@ -134,7 +134,7 @@ export const AdminAnggotaScreen: React.FC<AdminAnggotaScreenProps> = ({ onMember
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Data Anggota" />
 
-      <div className="p-4 max-w-md mx-auto space-y-4">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-4">
         <Button 
           fullWidth 
           className="flex items-center justify-center" 

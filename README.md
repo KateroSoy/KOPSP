@@ -357,6 +357,7 @@ npm run test:db
 - `PATCH /api/admin/loan-applications/:id/status`
 - `GET /api/admin/loans`
 - `POST /api/admin/loans/:id/payments`
+- `POST /api/admin/savings-deposits`
 - `GET /api/notifications`
 - `PATCH /api/notifications/:id/read`
 - `GET /api/transactions`

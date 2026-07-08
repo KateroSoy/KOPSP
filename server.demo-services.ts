@@ -1576,6 +1576,55 @@ export const createDemoServices = (): AppServices => {
           recentTransactions: store.transactions.filter((item) => item.memberCode === memberCode).slice(0, 10),
         });
       },
+      async recordSavingsDeposit(userId, input) {
+        getAdminOrThrow(store, userId);
+        const member = store.users.find((item) => item.memberId === input.memberId && item.role === "member");
+        if (!member) {
+          throw new AppError(404, "MEMBER_NOT_FOUND", "Anggota tidak ditemukan.");
+        }
+        const product = store.savingsProducts.find((item) => item.id === input.savingsProductId);
+        if (!product) {
+          throw new AppError(404, "SAVINGS_PRODUCT_NOT_FOUND", "Jenis simpanan tidak ditemukan.");
+        }
+        if (input.amount <= 0) {
+          throw new AppError(400, "INVALID_AMOUNT", "Nominal simpanan harus lebih dari 0.");
+        }
+
+        const balances = store.memberBalances[member.memberId] ?? {};
+        balances[product.id] = (balances[product.id] ?? 0) + input.amount;
+        store.memberBalances[member.memberId] = balances;
+
+        const typeLabel = product.name.toLowerCase().includes("wajib")
+          ? "Setoran Wajib"
+          : product.name.toLowerCase().includes("pokok")
+            ? "Setoran Pokok"
+            : "Setoran Sukarela";
+
+        const transaction: DemoTransaction = {
+          id: `trx-${nextCounter(store, "trx")}`,
+          type: typeLabel,
+          amount: input.amount,
+          date: getToday(),
+          status: "Berhasil",
+          category: "simpanan",
+          memberName: member.name,
+          memberCode: member.memberId,
+          savingsProductId: product.id,
+          proofUrl: input.proof || null,
+        };
+        store.transactions.unshift(transaction);
+
+        store.notifications.unshift({
+          id: `notif-${nextCounter(store, "notif")}`,
+          userId: member.id,
+          title: "Simpanan Bertambah",
+          message: `Setoran ${product.name} sebesar Rp${input.amount} telah dicatat.`,
+          date: getToday(),
+          read: false,
+        });
+
+        return clone(transaction);
+      },
       async recordLoanPayment(userId, loanId, input) {
         getAdminOrThrow(store, userId);
         const loan = store.loans.find((item) => item.id === loanId);

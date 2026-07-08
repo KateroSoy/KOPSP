@@ -25,76 +25,80 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         unreadCount={unreadCount}
       />
 
-      <div className="p-4 max-w-md mx-auto space-y-6">
+      <div className="p-4 md:p-8 max-w-md md:max-w-7xl mx-auto space-y-6 md:space-y-8">
         {/* Greeting */}
         <div>
           <p className="text-sm text-gray-500">Halo, selamat datang</p>
           <h2 className="text-xl font-bold text-gray-900">{user.name}</h2>
         </div>
 
-        {/* Total Savings Card */}
-        <Card className="bg-emerald-600 border-none text-white overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-10 -mt-10"></div>
-          <CardContent className="p-6 relative z-10">
-            <p className="text-emerald-100 text-sm mb-1">Total Simpanan</p>
-            <h3 className="text-3xl font-bold mb-4">{formatRupiah(savings.total)}</h3>
-            <div className="flex items-center text-sm text-emerald-50">
-              <span>No. Anggota: {user.memberId}</span>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="md:grid md:grid-cols-2 md:gap-6 space-y-6 md:space-y-0">
+          {/* Total Savings Card */}
+          <Card id="tour-saldo" className="bg-emerald-600 border-none text-white overflow-hidden relative h-full">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-10 -mt-10"></div>
+            <CardContent className="p-6 relative z-10 flex flex-col justify-center h-full">
+              <p className="text-emerald-100 text-sm md:text-base mb-1">Total Simpanan</p>
+              <h3 className="text-3xl md:text-4xl font-bold mb-4">{formatRupiah(savings.total)}</h3>
+              <div className="flex items-center text-sm text-emerald-50 mt-auto">
+                <span>No. Anggota: {user.memberId}</span>
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-4 gap-3">
-          <button onClick={() => onNavigate('simpanan')} className="flex flex-col items-center space-y-2">
-            <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-emerald-600">
-              <Wallet size={24} />
+          {/* Active Loan Summary */}
+          {activeLoan ? (
+            <div className="flex flex-col h-full">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="font-semibold text-gray-900 md:text-lg">Pinjaman Aktif</h3>
+                <button onClick={() => onNavigate('pinjaman')} className="text-sm text-emerald-600 font-medium flex items-center hover:text-emerald-700 transition-colors">
+                  Detail <ArrowRight size={16} className="ml-1" />
+                </button>
+              </div>
+              <Card className="flex-1">
+                <CardContent className="p-4 md:p-6 flex items-center justify-between h-full">
+                  <div>
+                    <p className="text-sm md:text-base text-gray-500 mb-1">Sisa Pinjaman</p>
+                    <p className="font-bold text-gray-900 text-lg md:text-2xl">{formatRupiah(activeLoan.remaining)}</p>
+                  </div>
+                  <div className="text-right">
+                    <Badge variant="info" className="mb-2 md:mb-3">{activeLoan.status}</Badge>
+                    <p className="text-xs md:text-sm text-gray-500">Jatuh tempo:<br className="md:hidden" /> {activeLoan.nextDueDate}</p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-            <span className="text-xs font-medium text-gray-700">Simpanan</span>
-          </button>
-          <button onClick={() => onNavigate('pinjaman')} className="flex flex-col items-center space-y-2">
-            <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-emerald-600">
-              <CreditCard size={24} />
-            </div>
-            <span className="text-xs font-medium text-gray-700">Pinjaman</span>
-          </button>
-          <button onClick={() => onNavigate('riwayat')} className="flex flex-col items-center space-y-2">
-            <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-emerald-600">
-              <History size={24} />
-            </div>
-            <span className="text-xs font-medium text-gray-700">Riwayat</span>
-          </button>
-          <button onClick={() => onNavigate('akun')} className="flex flex-col items-center space-y-2">
-            <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-emerald-600">
-              <User size={24} />
-            </div>
-            <span className="text-xs font-medium text-gray-700">Profil</span>
-          </button>
+          ) : (
+            <div className="hidden md:block"></div>
+          )}
         </div>
 
-        {/* Active Loan Summary */}
-        {activeLoan && (
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <h3 className="font-semibold text-gray-900">Pinjaman Aktif</h3>
-              <button onClick={() => onNavigate('pinjaman')} className="text-sm text-emerald-600 font-medium flex items-center">
-                Detail <ArrowRight size={16} className="ml-1" />
-              </button>
+        {/* Quick Actions */}
+        <div id="tour-quick-actions" className="grid grid-cols-4 gap-3 md:gap-6">
+          <button onClick={() => onNavigate('simpanan')} className="flex flex-col items-center space-y-2 group">
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-emerald-600 group-hover:bg-emerald-50 transition-colors">
+              <Wallet className="w-6 h-6 md:w-8 md:h-8" />
             </div>
-            <Card>
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Sisa Pinjaman</p>
-                  <p className="font-bold text-gray-900">{formatRupiah(activeLoan.remaining)}</p>
-                </div>
-                <div className="text-right">
-                  <Badge variant="info" className="mb-1">{activeLoan.status}</Badge>
-                  <p className="text-xs text-gray-500">Jatuh tempo: {activeLoan.nextDueDate}</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+            <span className="text-xs md:text-sm font-medium text-gray-700">Simpanan</span>
+          </button>
+          <button onClick={() => onNavigate('pinjaman')} className="flex flex-col items-center space-y-2 group">
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-emerald-600 group-hover:bg-emerald-50 transition-colors">
+              <CreditCard className="w-6 h-6 md:w-8 md:h-8" />
+            </div>
+            <span className="text-xs md:text-sm font-medium text-gray-700">Pinjaman</span>
+          </button>
+          <button onClick={() => onNavigate('riwayat')} className="flex flex-col items-center space-y-2 group">
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-emerald-600 group-hover:bg-emerald-50 transition-colors">
+              <History className="w-6 h-6 md:w-8 md:h-8" />
+            </div>
+            <span className="text-xs md:text-sm font-medium text-gray-700">Riwayat</span>
+          </button>
+          <button onClick={() => onNavigate('akun')} className="flex flex-col items-center space-y-2 group">
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-emerald-600 group-hover:bg-emerald-50 transition-colors">
+              <User className="w-6 h-6 md:w-8 md:h-8" />
+            </div>
+            <span className="text-xs md:text-sm font-medium text-gray-700">Profil</span>
+          </button>
+        </div>
 
         {/* Recent Transactions */}
         <div className="space-y-3">

@@ -32,7 +32,7 @@ export const AdminDetailAnggotaScreen: React.FC<AdminDetailAnggotaScreenProps> =
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Detail Anggota" showBack onBack={onBack} />
 
-      <div className="p-4 max-w-md mx-auto space-y-6">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-6">
         {/* Profile Info */}
         <Card>
           <CardContent className="p-4">

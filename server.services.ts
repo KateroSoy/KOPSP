@@ -30,6 +30,7 @@ import {
   hashPassword,
   maybeNull,
   normalizePhone,
+  savePaymentProof,
 } from "./server.utils.js";
 
 type PrismaLike = typeof defaultPrisma;
@@ -985,6 +986,90 @@ export const createServices = (prisma: PrismaLike = defaultPrisma): AppServices 
       });
       return items.map((item) => mapLoan(item, false));
     },
+    async recordSavingsDeposit(userId, input) {
+      await getAdminUser(prisma, userId);
+      const transaction = await prisma.$transaction(async (tx) => {
+        const member = await tx.memberProfile.findUnique({
+          where: { memberCode: input.memberId },
+          include: { user: true },
+        });
+        if (!member) {
+          throw new AppError(404, "MEMBER_NOT_FOUND", "Anggota tidak ditemukan.");
+        }
+
+        const savingsProduct = await tx.savingsProduct.findUnique({
+          where: { id: input.savingsProductId },
+        });
+        if (!savingsProduct) {
+          throw new AppError(404, "SAVINGS_PRODUCT_NOT_FOUND", "Jenis simpanan tidak ditemukan.");
+        }
+
+        // Determine the transaction type based on the savings product name
+        const productName = savingsProduct.name.toLowerCase();
+        let transactionType: TransactionType;
+        if (productName.includes("wajib") || productName.includes("pokok")) {
+          transactionType = TransactionType.MANDATORY_SAVING_DEPOSIT;
+        } else {
+          transactionType = TransactionType.VOLUNTARY_SAVING_DEPOSIT;
+        }
+
+        // Update or create the member's savings balance
+        await tx.memberSavingsBalance.upsert({
+          where: {
+            memberId_savingsProductId: {
+              memberId: member.id,
+              savingsProductId: savingsProduct.id,
+            },
+          },
+          update: {
+            amount: { increment: input.amount },
+          },
+          create: {
+            memberId: member.id,
+            savingsProductId: savingsProduct.id,
+            amount: input.amount,
+          },
+        });
+
+        // Save payment proof if provided
+        let proofUrl: string | null = null;
+        if (input.proof) {
+          proofUrl = await savePaymentProof({ dataUrl: input.proof });
+        }
+
+        // Create the transaction record
+        const createdTransaction = await tx.transaction.create({
+          data: {
+            transactionCode: uniqueCode("TRX-"),
+            memberId: member.id,
+            savingsProductId: savingsProduct.id,
+            category: TransactionCategory.SAVINGS,
+            type: transactionType,
+            amount: input.amount,
+            status: "Berhasil",
+            description: input.note?.trim() || `Setoran ${savingsProduct.name}`,
+            proofUrl,
+            createdById: userId,
+          },
+          include: { member: { include: { user: true } } },
+        });
+
+        // Notify the member
+        await tx.notification.create({
+          data: {
+            notificationCode: uniqueCode("NOTIF-"),
+            userId: member.userId,
+            type: NotificationType.PAYMENT_POSTED,
+            title: "Simpanan Bertambah",
+            message: `Setoran ${savingsProduct.name} sebesar Rp${input.amount} telah dicatat.`,
+          },
+        });
+
+        return createdTransaction;
+      });
+
+      return mapTransaction(transaction);
+    },
     async recordLoanPayment(userId, loanId, input) {
       await getAdminUser(prisma, userId);
       const transaction = await prisma.$transaction(async (tx) => {
@@ -1011,6 +1096,7 @@ export const createServices = (prisma: PrismaLike = defaultPrisma): AppServices 
             amount: input.amount,
             method: toPaymentMethod(input.method),
             note: maybeNull(input.note),
+            proofUrl: input.proof ? await savePaymentProof({ dataUrl: input.proof }) : null,
             recordedById: userId,
           },
         });
@@ -1038,6 +1124,7 @@ export const createServices = (prisma: PrismaLike = defaultPrisma): AppServices 
             amount: input.amount,
             status: "Berhasil",
             description: input.note?.trim() || "Pembayaran angsuran pinjaman",
+            proofUrl: input.proof ? await savePaymentProof({ dataUrl: input.proof }) : null,
             createdById: userId,
           },
           include: { member: { include: { user: true } } },

@@ -52,7 +52,7 @@ export const AdminPengajuanScreen: React.FC = () => {
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Review Pengajuan" />
 
-      <div className="p-4 max-w-md mx-auto space-y-4">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-4">
         {/* Tabs */}
         <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
           {tabs.map((tab) => (

@@ -28,7 +28,7 @@ export const AdminMenuScreen: React.FC<AdminMenuScreenProps> = ({ onNavigate, on
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Menu Lainnya" />
 
-      <div className="p-4 max-w-md mx-auto space-y-6">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-6">
         {/* Profile Header */}
         <div className="flex items-center space-x-4 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
           <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0">

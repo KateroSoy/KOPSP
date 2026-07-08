@@ -91,7 +91,7 @@ export const AdminPengumumanScreen: React.FC = () => {
           setContent('');
           setIsActive(true);
         }} />
-        <div className="p-4 max-w-md mx-auto space-y-4">
+        <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-4">
           <Input 
             label="Judul Pengumuman" 
             placeholder="Contoh: Rapat Anggota" 
@@ -138,7 +138,7 @@ export const AdminPengumumanScreen: React.FC = () => {
     <div className="min-h-screen bg-gray-50 pb-24">
       <TopBar title="Kelola Pengumuman" />
 
-      <div className="p-4 max-w-md mx-auto space-y-4">
+      <div className="p-4 max-w-md md:max-w-5xl mx-auto space-y-4">
         <Button fullWidth className="flex items-center justify-center" onClick={() => setIsCreating(true)}>
           <Plus size={20} className="mr-2" /> Buat Pengumuman Baru
         </Button>
